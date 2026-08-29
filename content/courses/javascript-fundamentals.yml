@@ -1,0 +1,107 @@
+slug: javascript-fundamentals
+title: JavaScript Fundamentals
+description: Start from zero and learn the language of the web. Variables, functions, arrays, objects and the mental models you need before any framework.
+category: Programming
+level: Beginner
+tags: [javascript, web, programming]
+estimatedHours: 6
+modules:
+  - title: Language Basics
+    lessons:
+      - title: Variables and Types
+        durationMinutes: 12
+        content: |
+          JavaScript has three ways to declare a variable. Use const by default, let when you must reassign, and avoid var.
+
+          const name = "UniSphere"
+          let score = 0
+          score = score + 10
+
+          Primitives are copied by value: string, number, boolean, null, undefined, symbol, bigint. Objects, arrays and functions are copied by reference, which is why two objects never equal each other even with the same contents.
+        starterCode: |
+          const name = "UniSphere"
+          let score = 0
+          score = score + 10
+          console.log(name, score)
+      - title: Functions and Arrow Syntax
+        durationMinutes: 15
+        content: |
+          Functions are values. You can store them, pass them and return them.
+
+          function add(a, b) { return a + b }
+          const addArrow = (a, b) => a + b
+
+          Arrow functions do not have their own this, which makes them perfect for callbacks where you want to keep the surrounding this.
+        starterCode: |
+          const addArrow = (a, b) => a + b
+          console.log(addArrow(2, 3))
+      - title: Conditionals and Loops
+        durationMinutes: 12
+        content: |
+          Use if, else if and else for branching. For repeated work prefer for...of over classic for loops when you just need the values.
+
+          for (const item of ["a", "b", "c"]) {
+            console.log(item)
+          }
+    quiz:
+      title: Language Basics Quiz
+      questions:
+        - question: Which declaration should you use by default?
+          options: [var, let, const, static]
+          correctAnswer: 2
+          marks: 1
+        - question: What is the result of typeof null?
+          options: ["null", "object", "undefined", "number"]
+          correctAnswer: 1
+          marks: 1
+        - question: Which loop is preferred when iterating values of an array?
+          options: [for...in, for...of, while, do...while]
+          correctAnswer: 1
+          marks: 1
+  - title: Data Structures
+    lessons:
+      - title: Arrays and Array Methods
+        durationMinutes: 15
+        content: |
+          map transforms every item, filter keeps matching items, reduce folds everything into one value.
+
+          const nums = [1, 2, 3, 4]
+          const doubled = nums.map(n => n * 2)
+          const even = nums.filter(n => n % 2 === 0)
+          const sum = nums.reduce((acc, n) => acc + n, 0)
+        starterCode: |
+          const nums = [1, 2, 3, 4]
+          console.log(nums.map(n => n * 2))
+          console.log(nums.reduce((acc, n) => acc + n, 0))
+      - title: Objects and Destructuring
+        durationMinutes: 12
+        content: |
+          Objects group related data. Destructuring pulls fields out cleanly.
+
+          const user = { name: "Hussain", role: "CEO" }
+          const { name, role } = user
+
+          Spread copies fields: const updated = { ...user, role: "Founder" }
+        starterCode: |
+          const user = { name: "Hussain", role: "CEO" }
+          const { name, role } = user
+          console.log(name, role)
+      - title: JSON and the Console
+        durationMinutes: 8
+        content: |
+          JSON.stringify turns an object into text and JSON.parse turns text back into an object. This is the format your future APIs will speak every day.
+    quiz:
+      title: Data Structures Quiz
+      questions:
+        - question: Which method transforms every array item and returns a new array?
+          options: [forEach, map, reduce, find]
+          correctAnswer: 1
+          marks: 1
+        - question: What does the spread operator ... do to an object literal?
+          options: ["Deletes fields", "Copies fields into a new object", "Freezes the object", "Converts it to JSON"]
+          correctAnswer: 1
+          marks: 1
+        - question: Which JSON method converts an object into a string?
+          options: [JSON.parse, JSON.stringify, JSON.toText, JSON.encode]
+          correctAnswer: 1
+          marks: 1

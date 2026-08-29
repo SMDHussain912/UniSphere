@@ -1,0 +1,190 @@
+- key: python
+  name: Python
+  category: language
+  description: General-purpose programming language
+  order: 1
+
+- key: python-basics
+  name: Python Basics
+  parentKey: python
+  category: language
+  description: Variables, data types, control flow, functions
+  order: 1
+
+- key: python-oop
+  name: Object-Oriented Python
+  parentKey: python
+  category: language
+  description: Classes, inheritance, polymorphism, encapsulation
+  order: 2
+
+- key: python-data
+  name: Python Data Libraries
+  parentKey: python
+  category: language
+  description: NumPy, Pandas, data manipulation
+  order: 3
+
+- key: python-apis
+  name: Python APIs
+  parentKey: python
+  category: language
+  description: Building REST APIs with Flask and FastAPI
+  order: 4
+
+- key: ml
+  name: Machine Learning
+  category: domain
+  description: Machine learning fundamentals and applications
+  order: 2
+
+- key: ml-basics
+  name: ML Fundamentals
+  parentKey: ml
+  category: domain
+  description: Regression, classification, clustering basics
+  order: 1
+
+- key: ml-deep
+  name: Deep Learning
+  parentKey: ml
+  category: domain
+  description: Neural networks, CNNs, RNNs, transformers
+  order: 2
+
+- key: ml-pytorch
+  name: PyTorch
+  parentKey: ml-deep
+  category: tools
+  description: Deep learning with PyTorch framework
+  order: 1
+
+- key: javascript
+  name: JavaScript
+  category: language
+  description: Web programming language
+  order: 3
+
+- key: js-basics
+  name: JavaScript Basics
+  parentKey: javascript
+  category: language
+  description: Variables, functions, DOM, events
+  order: 1
+
+- key: js-advanced
+  name: Advanced JavaScript
+  parentKey: javascript
+  category: language
+  description: Closures, prototypes, async/await, modules
+  order: 2
+
+- key: react
+  name: React
+  category: frontend
+  description: Component-based UI library
+  order: 4
+
+- key: react-basics
+  name: React Basics
+  parentKey: react
+  category: frontend
+  description: Components, props, state, hooks
+  order: 1
+
+- key: react-advanced
+  name: Advanced React
+  parentKey: react
+  category: frontend
+  description: Context, performance, patterns, testing
+  order: 2
+
+- key: nodejs
+  name: Node.js
+  category: backend
+  description: Server-side JavaScript runtime
+  order: 5
+
+- key: nodejs-basics
+  name: Node.js Basics
+  parentKey: nodejs
+  category: backend
+  description: Modules, file system, HTTP, Express
+  order: 1
+
+- key: mongodb
+  name: MongoDB
+  category: database
+  description: NoSQL document database
+  order: 6
+
+- key: sql
+  name: SQL
+  category: database
+  description: Structured Query Language for relational databases
+  order: 7
+
+- key: sql-basics
+  name: SQL Basics
+  parentKey: sql
+  category: database
+  description: SELECT, INSERT, UPDATE, DELETE, JOINs
+  order: 1
+
+- key: docker
+  name: Docker
+  category: devops
+  description: Containerization platform
+  order: 8
+
+- key: docker-basics
+  name: Docker Basics
+  parentKey: docker
+  category: devops
+  description: Images, containers, Dockerfile, compose
+  order: 1
+
+- key: linux
+  name: Linux
+  category: infrastructure
+  description: Linux operating system and command line
+  order: 9
+
+- key: linux-basics
+  name: Linux Basics
+  parentKey: linux
+  category: infrastructure
+  description: Filesystem, processes, permissions, networking
+  order: 1
+
+- key: git
+  name: Git
+  category: tools
+  description: Version control system
+  order: 10
+
+- key: cpp
+  name: C++
+  category: language
+  description: Systems programming language
+  order: 11
+
+- key: cpp-basics
+  name: C++ Basics
+  parentKey: cpp
+  category: language
+  description: Variables, pointers, memory management, OOP
+  order: 1
+
+- key: java
+  name: Java
+  category: language
+  description: Object-oriented programming language
+  order: 12
+
+- key: java-basics
+  name: Java Basics
+  parentKey: java
+  category: language
+  description: Syntax, OOP, collections, exceptions
+  order: 1

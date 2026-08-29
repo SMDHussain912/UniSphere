@@ -1,0 +1,30 @@
+const express = require('express');
+const router = express.Router();
+const {
+  runCode,
+  saveSnippet,
+  getMySnippets,
+  getSnippet,
+  updateSnippet,
+  deleteSnippet,
+  getPublicSnippets,
+} = require('../controllers/codeLabController');
+const { authenticate } = require('../middlewares/authMiddleware');
+const {
+  runCodeValidator,
+  snippetValidator,
+  snippetUpdateValidator,
+  snippetIdValidator,
+} = require('../validators/labValidator');
+const validateRequest = require('../middlewares/validateRequest');
+
+router.post('/run', authenticate, runCodeValidator, validateRequest, runCode);
+
+router.get('/snippets', authenticate, getMySnippets);
+router.get('/snippets/public', getPublicSnippets);
+router.post('/snippets', authenticate, snippetValidator, validateRequest, saveSnippet);
+router.get('/snippets/:id', authenticate, snippetIdValidator, validateRequest, getSnippet);
+router.put('/snippets/:id', authenticate, snippetIdValidator, validateRequest, snippetUpdateValidator, validateRequest, updateSnippet);
+router.delete('/snippets/:id', authenticate, snippetIdValidator, validateRequest, deleteSnippet);
+
+module.exports = router;

@@ -1,0 +1,76 @@
+slug: sql-basics
+title: SQL Basics
+description: Query and shape relational data. SELECT to JOIN to GROUP BY, the SQL you need for interviews and for reading any company database.
+category: Data
+level: Beginner
+tags: [sql, databases, data]
+estimatedHours: 5
+modules:
+  - title: Reading Data
+    lessons:
+      - title: SELECT and WHERE
+        durationMinutes: 12
+        content: |
+          SELECT chooses columns, FROM chooses the table, WHERE filters rows.
+
+          SELECT title, salary FROM jobs
+          WHERE status = 'Active'
+
+          Strings need single quotes. NULL never equals anything, use IS NULL to find it.
+      - title: ORDER BY and LIMIT
+        durationMinutes: 8
+        content: |
+          Sort with ORDER BY and trim results with LIMIT. Together they give you top-N queries.
+
+          SELECT title, vacancies FROM jobs
+          ORDER BY vacancies DESC
+          LIMIT 5
+    quiz:
+      title: Reading Data Quiz
+      questions:
+        - question: How do you compare against NULL in SQL?
+          options: ["= NULL", "IS NULL", "== NULL", "LIKE NULL"]
+          correctAnswer: 1
+          marks: 1
+        - question: Which clause limits results to the first 5 rows?
+          options: [TOP 5 ONLY, LIMIT 5, FIRST 5, ROWS 5]
+          correctAnswer: 1
+          marks: 1
+  - title: Combining Tables
+    lessons:
+      - title: INNER and LEFT JOIN
+        durationMinutes: 15
+        content: |
+          JOIN connects rows from two tables using a matching column.
+
+          SELECT u.fullname, e.course_slug
+          FROM users u
+          INNER JOIN course_progress e ON e.user_id = u.id
+
+          INNER JOIN keeps only matches. LEFT JOIN keeps every row from the left table and fills missing right-side values with NULL.
+      - title: GROUP BY and Aggregates
+        durationMinutes: 12
+        content: |
+          Aggregates collapse many rows into one answer. COUNT, SUM, AVG, MIN and MAX work with GROUP BY.
+
+          SELECT course_slug, COUNT(*) AS learners
+          FROM course_progress
+          GROUP BY course_slug
+          ORDER BY learners DESC
+
+          Filter groups with HAVING, not WHERE.
+    quiz:
+      title: Combining Tables Quiz
+      questions:
+        - question: Which join keeps every row of the left table?
+          options: [INNER JOIN, LEFT JOIN, CROSS JOIN, SELF JOIN]
+          correctAnswer: 1
+          marks: 1
+        - question: Which clause filters after GROUP BY?
+          options: [WHERE, HAVING, FILTER, ORDER BY]
+          correctAnswer: 1
+          marks: 1
+        - question: What does COUNT(*) return?
+          options: ["The first row", "The number of rows in the group", "The sum of a column", "The table size in bytes"]
+          correctAnswer: 1
+          marks: 1

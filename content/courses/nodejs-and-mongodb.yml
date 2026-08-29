@@ -1,0 +1,66 @@
+slug: nodejs-and-mongodb
+title: Node.js and MongoDB
+description: Build backends that scale. Express routing, REST conventions, MongoDB data modelling and Mongoose, the exact stack powering this platform.
+category: Backend
+level: Intermediate
+tags: [nodejs, express, mongodb, api]
+estimatedHours: 9
+modules:
+  - title: Node and Express Foundations
+    lessons:
+      - title: Modules and npm
+        durationMinutes: 12
+        content: |
+          Node runs JavaScript outside the browser. Every file is a module: export with module.exports and import with require.
+
+          CommonJS is what this platform uses. npm install adds a dependency and records it in package.json, which is your project contract.
+      - title: Routing and Middleware
+        durationMinutes: 16
+        content: |
+          An Express app is a pipeline. Each request flows through middleware in order until a handler responds.
+
+          app.use(express.json())
+          router.get("/courses", listCourses)
+
+          Middleware can end the request or call next() to pass it along. Authentication, validation and error handling are all just middleware.
+    quiz:
+      title: Node and Express Quiz
+      questions:
+        - question: What does middleware call to pass control to the next handler?
+          options: [skip(), return, next(), yield()]
+          correctAnswer: 2
+          marks: 1
+        - question: Which file records installed dependencies?
+          options: [node_modules, package.json, index.js, .env]
+          correctAnswer: 1
+          marks: 1
+  - title: MongoDB with Mongoose
+    lessons:
+      - title: Documents and Collections
+        durationMinutes: 14
+        content: |
+          MongoDB stores flexible JSON-like documents in collections. A schema describes shape and rules, and a model is your handle for querying.
+
+          const userSchema = new mongoose.Schema({ email: { type: String, unique: true } })
+          const User = mongoose.model("User", userSchema)
+      - title: Queries and Indexes
+        durationMinutes: 15
+        content: |
+          find, findOne and findById are your daily drivers. Indexes make queries fast: any field you filter or sort on regularly should be indexed.
+
+          A compound unique index like { userId: 1, courseSlug: 1 } both speeds lookups and guarantees one progress document per user per course.
+    quiz:
+      title: MongoDB Quiz
+      questions:
+        - question: What does a Mongoose model give you?
+          options: ["A CSS selector", "A structured handle for querying a collection", "A browser API", "An HTML template"]
+          correctAnswer: 1
+          marks: 1
+        - question: Why add a compound unique index on userId and courseSlug?
+          options: ["It encrypts data", "It speeds lookups and prevents duplicates", "It sorts the collection on disk", "It is required by MongoDB"]
+          correctAnswer: 1
+          marks: 1
+        - question: Which method fetches one document by its id?
+          options: [Model.all(), Model.findById, Model.query.id, Model.select]
+          correctAnswer: 1
+          marks: 1
