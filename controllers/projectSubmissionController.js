@@ -3,6 +3,7 @@ const ProjectSubmission = require('../models/ProjectSubmission');
 const UserSkill = require('../models/UserSkill');
 const dockerRunner = require('../utils/dockerRunner');
 const { awardPoints } = require('../utils/points');
+const { awardXp, awardXpBySkill, checkAchievements } = require('./gamificationController');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
@@ -119,6 +120,11 @@ const runTests = asyncHandler(async (req, res, next) => {
       await userSkill.save();
     }
     await awardPoints(req.user.id, totalScore, `project passed: ${project.slug}`, 'learningPoints');
+    await awardXp(req.user.id, 100, `project: ${project.slug}`);
+    for (const skillKey of project.skillKeys) {
+      await awardXpBySkill(req.user.id, skillKey, 100);
+    }
+    await checkAchievements(req.user.id);
   }
   return success(res, {
     data: { submission, passed: submission.status === 'passed', score: totalScore, maxScore: project.totalPoints },

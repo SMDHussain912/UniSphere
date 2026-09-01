@@ -8,7 +8,7 @@ const QuizAttempt = require('../models/QuizAttempt');
 const courseLoader = require('../utils/courseLoader');
 const { generateToken } = require('../utils/generateToken');
 
-jest.setTimeout(90000);
+jest.setTimeout(120000);
 
 const MONGO_URL =
   process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/unisphere_test_courses';

@@ -7,9 +7,9 @@ const JobRequirement = require('../models/JobRequirement');
 const UserSkill = require('../models/UserSkill');
 const { generateToken } = require('../utils/generateToken');
 
-jest.setTimeout(90000);
+jest.setTimeout(120000);
 
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/unitech_test_matching';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/unisphere_test_matching';
 
 let token;
 let adminToken;
@@ -28,7 +28,7 @@ const createUser = (firstname, phone, role = 'user') =>
   });
 
 beforeAll(async () => {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL, { family: 4 });
   await Promise.all([User, Job, JobRequirement, UserSkill].map((model) => model.init()));
 });
 

@@ -156,7 +156,7 @@ Then it says:
 
 ---
 
-## Phase 8 — Skill-Based Communities & Chat
+## Phase 8 — Skill-Based Communities & Chat ✅ COMPLETED
 
 Community revolves around skills, not generic socializing.
 
@@ -182,7 +182,7 @@ Users can: ask questions, share projects, discuss problems, find teammates, part
 
 ---
 
-## Phase 9 — Gamification & Living Portfolio
+## Phase 9 — Gamification & Living Portfolio ✅ COMPLETED
 
 ### XP and Levels
 
@@ -286,3 +286,9 @@ Post jobs, post internships, skill-based candidate search, technical assessments
 | 2026-08-29 | Phase 2 — Social Layer & Directory | ✅ Done, 6/6 profiles tests green |
 | 2026-08-29 | Phase 7 — Intelligent Job Matching | ✅ Done, 13/13 matching tests green |
 | 2026-08-29 | Full suite verification | ✅ 78/78 tests green across 8 suites |
+| 2026-08-30 | Phase 3 — Skill Graph & Verified Evidence | ✅ Done, 15/15 skills tests green |
+| 2026-08-30 | Phase 4 — Cloud Practice Labs | ✅ Done, 19/19 lab tests green (Docker-gated) |
+| 2026-08-30 | Phase 6 — Project-Based Learning | ✅ Done, 16/16 project tests green |
+| 2026-08-30 | Phase 8 — Communities & Chat | ✅ Done, suite green |
+| 2026-08-31 | Phase 9 — Gamification & Living Portfolio | ✅ Done, 13/13 gamification tests green |
+| 2026-08-31 | XP wired into all feature flows | ✅ Lessons +10/+50, quizzes +25/+40, exams +60, projects +100 with per-skill XP; ghost achievements fixed; full suite green |

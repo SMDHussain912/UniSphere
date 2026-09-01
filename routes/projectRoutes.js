@@ -27,6 +27,9 @@ const {
 } = require('../validators/projectValidator');
 const validateRequest = require('../middlewares/validateRequest');
 
+router.get('/submissions/mine', authenticate, getMySubmissions);
+router.get('/submissions/:id', authenticate, projectIdValidator, validateRequest, getSubmission);
+
 router.get('/', projectQueryValidator, validateRequest, getProjects);
 router.get('/:slug', projectSlugValidator, validateRequest, getProject);
 
@@ -34,8 +37,6 @@ router.post('/', authenticate, projectValidator, validateRequest, createProject)
 router.put('/:id', authenticate, projectIdValidator, validateRequest, projectUpdateValidator, validateRequest, updateProject);
 router.delete('/:id', authenticate, projectIdValidator, validateRequest, deleteProject);
 
-router.get('/submissions/mine', authenticate, getMySubmissions);
-router.get('/submissions/:id', authenticate, projectIdValidator, validateRequest, getSubmission);
 router.post('/:id/submit', authenticate, submissionValidator, validateRequest, submitProject);
 router.post('/submissions/:id/test', authenticate, projectIdValidator, validateRequest, runTests);
 router.post('/submissions/:id/review', authenticate, reviewValidator, validateRequest, addReview);

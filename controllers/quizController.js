@@ -2,6 +2,7 @@ const Quiz = require('../models/Quiz');
 const QuizAttempt = require('../models/QuizAttempt');
 const courseLoader = require('../utils/courseLoader');
 const { awardPoints } = require('../utils/points');
+const { awardXp, checkAchievements } = require('./gamificationController');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
@@ -130,6 +131,13 @@ const submitAttempt = asyncHandler(async (req, res, next) => {
     await awardPoints(req.user._id, pointsAwarded, `quiz ${quiz.key}`, 'learningPoints');
   }
 
+  let xpAwarded = 0;
+  if (passed) {
+    xpAwarded = percent >= 90 ? 40 : 25;
+    await awardXp(req.user._id, xpAwarded, `quiz: ${quiz.key}`);
+    await checkAchievements(req.user._id);
+  }
+
   return success(res, {
     data: {
       attempt: {
@@ -140,6 +148,7 @@ const submitAttempt = asyncHandler(async (req, res, next) => {
         passed,
       },
       pointsAwarded,
+      xpAwarded,
       isBestScore: score >= (previousBest ? previousBest.score : 0),
     },
     message: passed ? 'Quiz passed. Well done.' : 'Quiz submitted. Keep practicing.',

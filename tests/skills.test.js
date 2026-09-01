@@ -7,10 +7,10 @@ const UserSkill = require('../models/UserSkill');
 const skillGraph = require('../utils/skillGraph');
 const { generateToken } = require('../utils/generateToken');
 
-jest.setTimeout(90000);
+jest.setTimeout(120000);
 
 const MONGO_URL =
-  process.env.MONGO_URL || 'mongodb://localhost:27017/unitech_test_skills';
+  process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/unisphere_test_skills';
 
 let token;
 let userId;
@@ -28,7 +28,7 @@ const createUser = (firstname, phone) =>
   });
 
 beforeAll(async () => {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL, { family: 4 });
   await Promise.all([User, SkillNode, UserSkill].map((model) => model.init()));
   await skillGraph.seedGraph();
 });

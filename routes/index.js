@@ -24,6 +24,7 @@ const enrollmentRoutes = require('./enrollmentRoutes');
 const hallTicketRoutes = require('./hallTicketRoutes');
 const questionPaperRoutes = require('./questionPaperRoutes');
 const gradingRoutes = require('./gradingRoutes');
+const gamificationRoutes = require('./gamificationRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/jobs', jobRoutes);
@@ -48,5 +49,6 @@ router.use('/', hallTicketRoutes);
 router.use('/', questionPaperRoutes);
 router.use('/', gradingRoutes);
 router.use('/admin', adminRoutes);
+router.use('/', gamificationRoutes);
 
 module.exports = router;

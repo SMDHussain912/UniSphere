@@ -1,9 +1,92 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { navigate } from '../router'
 import { useAuth } from '../auth/AuthContext'
 
 export function Loader() {
   return <div className="loader" />
+}
+
+export function Spinner({ size = 16 }) {
+  return <div className="spinner" style={{ width: size, height: size }} />
+}
+
+export function Avatar({ src, name, size = 32 }) {
+  const initials = name?.split(' ').map((n) => n[0]).join('').toUpperCase() || '?'
+  if (src) {
+    return <img src={src} alt={name || 'avatar'} className="avatar" style={{ width: size, height: size, borderRadius: '50%' }} />
+  }
+  return (
+    <div className="avatar" style={{ width: size, height: size, borderRadius: '50%' }} title={name || ''}>
+      <span className="avatar-text">{initials}</span>
+    </div>
+  )
+}
+
+export function ProgressBar({ value, label, small }) {
+  const pct = Math.min(100, Math.max(0, value || 0))
+  return (
+    <div className={small ? 'progress-compact' : 'progress'}>
+      {label && <div className="progress-label">{label}</div>}
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  )
+}
+
+export function Editor({ code, onChange, language }) {
+  return (
+    <textarea
+      className="code-editor"
+      value={code}
+      onChange={(e) => onChange(e.target.value)}
+      spellCheck="false"
+      data-language={language}
+    />
+  )
+}
+
+export function VirtualTerminal() {
+  return (
+    <div className="terminal">
+      <div className="terminal-header">
+        <span className="terminal-button" />
+        <span className="terminal-button" />
+        <span className="terminal-button" />
+      </div>
+      <pre className="terminal-output">user@unitech:~$ ls<span className="terminal-cursor"> _</span></pre>
+    </div>
+  )
+}
+
+export function Modal({ show, onClose, title, children }) {
+  if (!show) return null
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3 className="modal-title">{title}</h3>
+          <button type="button" className="modal-close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">{children}</div>
+      </div>
+    </div>
+  )
+}
+
+export function Tooltip({ text, children }) {
+  return (
+    <span className="tooltip" data-tip={text}>
+      {children}
+    </span>
+  )
+}
+
+export function useSearchParams() {
+  const path = useHashLocation()
+  const segs = path.split('/').filter(Boolean)
+  const id = segs[1]
+  return { id }
 }
 
 export function Badge({ kind = 'muted', children }) {

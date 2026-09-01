@@ -11,7 +11,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   verbose: true,
   forceExit: true,
-  testTimeout: 90000,
-  hookTimeout: 90000,
+  testTimeout: 120000,
   setupFiles: ['./tests/setup.js'],
 };

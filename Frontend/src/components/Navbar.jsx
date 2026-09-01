@@ -67,11 +67,19 @@ export default function Navbar() {
               <a href="#/internships">Internships</a>
             </Dropdown>
             <a href="#/community">Community</a>
+            <a href="#/leaderboard">Leaderboard</a>
             {isStaff && <a href="#/admin">Workspace</a>}
           </div>
           <div className="nav-right">
             {user ? (
               <>
+                <a href="#/achievements" className="nav-link-icon" title="Achievements">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M6 9H4.5a2.5 2.5 0 010-5H6" /><path d="M18 9h1.5a2.5 2.5 0 000-5H18" /><path d="M4 22h16" />
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                    <path d="M18 2H6v7a6 6 0 0012 0V2z" />
+                  </svg>
+                </a>
                 <NavLink to="/profile" className="username">{name}</NavLink>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
               </>
@@ -92,6 +100,7 @@ export default function Navbar() {
           <a href="#/projects" onClick={() => setMobileOpen(false)}>Projects</a>
           <a href="#/jobs" onClick={() => setMobileOpen(false)}>Jobs</a>
           <a href="#/community" onClick={() => setMobileOpen(false)}>Community</a>
+          <a href="#/leaderboard" onClick={() => setMobileOpen(false)}>Leaderboard</a>
           {isStaff && <a href="#/admin" onClick={() => setMobileOpen(false)}>Workspace</a>}
         </div>
       )}

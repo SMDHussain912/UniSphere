@@ -5,6 +5,7 @@ const AnswerSheet = require('../models/AnswerSheet');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
+const { awardXp, checkAchievements } = require('./gamificationController');
 
 const getExams = asyncHandler(async (req, res) => {
   const { search, category, status, page = 1, limit = 10 } = req.query;
@@ -163,6 +164,11 @@ const submitExam = asyncHandler(async (req, res, next) => {
         awarded: 0,
       })),
     });
+  }
+
+  if (isAutoOnly && status === 'Passed') {
+    await awardXp(req.user._id, 60, `assessment: ${exam.title}`);
+    await checkAchievements(req.user._id);
   }
 
   return success(res, {

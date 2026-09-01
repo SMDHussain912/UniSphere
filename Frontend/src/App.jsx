@@ -7,6 +7,17 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import Courses from './pages/courses/Courses'
+import Learn from './pages/learn/Learn'
+import Challenges from './pages/challenges/Challenges'
+import CodeLab from './pages/code/CodeLab'
+import SkillsPage from './pages/skills/Skills'
+import Notifications from './pages/notifications/Notifications'
+import Messages from './pages/Messages/Messages'
+import InternJobs from './pages/internships/InternJobs'
+import Community from './pages/community/Community'
+import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
 import Exams from './pages/Exams'
 import ExamDetail from './pages/ExamDetail'
 import TakeExam from './pages/TakeExam'
@@ -19,6 +30,9 @@ import Applications from './pages/Applications'
 import MyEnrollments from './pages/MyEnrollments'
 import MyHallTickets from './pages/MyHallTickets'
 import News from './pages/News'
+import Portfolio from './pages/Portfolio'
+import Leaderboard from './pages/Leaderboard'
+import Achievements from './pages/Achievements'
 import NotFound from './pages/NotFound'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminExams from './pages/admin/AdminExams'
@@ -55,6 +69,7 @@ function App() {
   const a = segs[0]
   const b = segs[1]
   const c = segs[2]
+  const id = b
 
   if (segs.length === 0) view = <Home />
   else if (a === 'home') view = <Home />
@@ -75,6 +90,22 @@ function App() {
   } else if (a === 'applications') view = <Applications />
   else if (a === 'enrollments') view = <MyEnrollments />
   else if (a === 'hall-tickets') view = <MyHallTickets />
+  else if (a === 'courses') view = <Courses />
+  else if (a === 'learn') view = <Learn />
+  else if (a === 'challenges') view = <Challenges />
+  else if (a === 'code') view = <CodeLab />
+  else if (a === 'skills') view = <SkillsPage />
+  else if (a === 'notifications') view = <Notifications />
+  else if (a === 'messages') view = id ? <Messages /> : <Messages />
+  else if (a === 'internships') view = id ? <InternJobs /> : <InternJobs />
+  else if (a === 'community') view = <Community />
+  else if (a === 'projects') {
+    if (!b) view = <Projects />
+    else view = <ProjectDetail slug={b} />
+  }
+  else if (a === 'leaderboard') view = <Leaderboard />
+  else if (a === 'achievements') view = <Achievements />
+  else if (a === 'portfolio') view = <Portfolio />
   else if (a === 'news') view = <News />
   else if (a === 'admin') {
     if (!b) view = <AdminDashboard />

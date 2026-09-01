@@ -1,6 +1,7 @@
 const courseLoader = require('../utils/courseLoader');
 const CourseProgress = require('../models/CourseProgress');
 const { awardPoints } = require('../utils/points');
+const { awardXp, checkAchievements } = require('./gamificationController');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
@@ -154,6 +155,13 @@ const completeLesson = asyncHandler(async (req, res, next) => {
 
   if (pointsAwarded > 0) {
     await awardPoints(req.user._id, pointsAwarded, `course progress on ${course.slug}`, 'learningPoints');
+  }
+
+  if (pointsAwarded > 0) {
+    await awardXp(req.user._id, courseCompleted ? 50 : 10, `lesson: ${course.slug}`);
+  }
+  if (courseCompleted) {
+    await checkAchievements(req.user._id);
   }
 
   return success(res, {
