@@ -3,6 +3,7 @@ const logger = require('./config/logger');
 const connectDB = require('./config/database');
 const courseLoader = require('./utils/courseLoader');
 const app = require('./app');
+const { initTerminalGateway } = require('./utils/terminalGateway');
 
 // Connect to database
 connectDB();
@@ -13,6 +14,8 @@ courseLoader.init();
 const server = app.listen(config.port, '0.0.0.0', () => {
   logger.info(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
 });
+
+initTerminalGateway(server);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {

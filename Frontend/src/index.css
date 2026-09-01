@@ -299,3 +299,16 @@ code-layout, .learn-layout, .community-layout, .chat-layout { display: grid; gri
 .achievement-icon { font-size: 1.5rem; }
 .achievement-name { font-size: 0.95rem; margin: 0 0 2px; }
 .achievement-desc { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+.terminal-live { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: #0B1120; }
+.terminal-statusbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #0f1729; border-bottom: 1px solid #1e293b; color: #94a3b8; font-size: 0.75rem; }
+.terminal-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.terminal-dot.on { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+.terminal-dot.off { background: #64748b; }
+.terminal-ttl { margin-left: auto; font-variant-numeric: tabular-nums; color: #c4b5fd; }
+.terminal-stop { margin-left: auto; background: none; border: 1px solid #ef444455; color: #f87171; border-radius: 6px; padding: 3px 10px; font-size: 0.72rem; cursor: pointer; }
+.terminal-ttl + .terminal-stop { margin-left: 0; }
+.terminal-stop:hover { background: #ef444422; }
+.terminal-host { height: 340px; padding: 6px; }
+.terminal-host .xterm { height: 100%; }
+.terminal-empty { border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 32px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+@media (max-width: 768px) { .terminal-host { height: 260px; } }

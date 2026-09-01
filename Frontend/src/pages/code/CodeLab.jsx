@@ -62,7 +62,7 @@ export default function CodeLab() {
         )}
       </main>
       <aside className="code-sidebar">
-        <Badge kind="info">Virtual Terminal</Badge>
+        <Badge kind="info">Live Terminal</Badge>
         <div className="terminal-container">
           <VirtualTerminal />
         </div>

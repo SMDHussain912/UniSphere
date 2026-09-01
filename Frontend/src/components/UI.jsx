@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { navigate } from '../router'
 import { useAuth } from '../auth/AuthContext'
+import { LabTerminal } from './Terminal'
 
 export function Loader() {
   return <div className="loader" />
@@ -47,16 +48,7 @@ export function Editor({ code, onChange, language }) {
 }
 
 export function VirtualTerminal() {
-  return (
-    <div className="terminal">
-      <div className="terminal-header">
-        <span className="terminal-button" />
-        <span className="terminal-button" />
-        <span className="terminal-button" />
-      </div>
-      <pre className="terminal-output">user@unitech:~$ ls<span className="terminal-cursor"> _</span></pre>
-    </div>
-  )
+  return <LabTerminal />
 }
 
 export function Modal({ show, onClose, title, children }) {

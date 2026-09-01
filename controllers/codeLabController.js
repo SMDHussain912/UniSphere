@@ -25,7 +25,12 @@ const runCode = asyncHandler(async (req, res, next) => {
   RUN_CONCURRENT.set(userId, true);
 
   try {
-    const result = await dockerRunner.runCode({ language, code, input });
+    let result;
+    try {
+      result = await dockerRunner.runCode({ language, code, input });
+    } catch (err) {
+      return next(new AppError('Code execution is temporarily unavailable. Try again shortly.', 503));
+    }
     return success(res, {
       data: { output: result.output, language },
       message: 'Code executed successfully.',

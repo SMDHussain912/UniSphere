@@ -31,4 +31,6 @@ module.exports = {
   labMemoryLimitMb: parseInt(process.env.LAB_MEMORY_LIMIT_MB) || 256,
   runTimeoutMs: parseInt(process.env.RUN_TIMEOUT_MS) || 10000,
   labEnabled: process.env.LAB_ENABLED !== 'false',
+  terminalEnabled: process.env.TERMINAL_ENABLED !== 'false',
+  dockerSocket: process.env.DOCKER_HOST || undefined,
 };

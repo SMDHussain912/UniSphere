@@ -1,6 +1,7 @@
 const config = require('../config/env');
 const LabSession = require('../models/LabSession');
 const dockerRunner = require('../utils/dockerRunner');
+const { closeTerminalsForSession } = require('../utils/terminalGateway');
 const AppError = require('../utils/AppError');
 const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
@@ -84,6 +85,7 @@ const stopSession = asyncHandler(async (req, res, next) => {
   if (session.containerId) {
     await dockerRunner.stopLabSession(session.containerId);
   }
+  closeTerminalsForSession(String(session._id));
 
   session.status = LabSession.STATUS_STOPPED;
   session.stoppedAt = new Date();
@@ -101,6 +103,7 @@ const cleanupExpiredSessions = async () => {
     if (session.containerId) {
       await dockerRunner.stopLabSession(session.containerId);
     }
+    closeTerminalsForSession(String(session._id));
     session.status = LabSession.STATUS_EXPIRED;
     session.stoppedAt = new Date();
     await session.save();
