@@ -69,8 +69,28 @@ const userSchema = new mongoose.Schema(
         'hallticket_admin',
         'grader_admin',
         'superadmin',
+        'company',
       ],
       default: 'user',
+    },
+    plan: {
+      type: String,
+      enum: ['free', 'pro', 'company'],
+      default: 'free',
+    },
+    planExpiresAt: { type: Date, default: null },
+    planLimits: {
+      labSessions: { type: Number, default: 2 },
+      codeRunsPerDay: { type: Number, default: 50 },
+      projectSubmissions: { type: Number, default: 5 },
+      advancedAnalytics: { type: Boolean, default: false },
+    },
+    companyProfile: {
+      companyName: String,
+      website: String,
+      industry: String,
+      size: String,
+      description: String,
     },
     active: {
       type: Boolean,
@@ -101,8 +121,35 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+const PLAN_LIMITS = {
+  free: { labSessions: 2, codeRunsPerDay: 50, projectSubmissions: 5, advancedAnalytics: false },
+  pro: { labSessions: 10, codeRunsPerDay: 500, projectSubmissions: 50, advancedAnalytics: true },
+  company: { labSessions: 0, codeRunsPerDay: 0, projectSubmissions: 0, advancedAnalytics: true },
+};
+
+userSchema.methods.resolveLimits = function () {
+  if (this.plan && PLAN_LIMITS[this.plan]) {
+    this.planLimits = PLAN_LIMITS[this.plan];
+  }
+  return this.planLimits;
+};
+
+userSchema.methods.hasPlan = function (plan) {
+  if (this.planExpiresAt && this.planExpiresAt < new Date()) {
+    this.plan = 'free';
+    this.planExpiresAt = null;
+    this.resolveLimits();
+    return plan === 'free';
+  }
+  if (Array.isArray(plan)) return plan.includes(this.plan);
+  return this.plan === plan;
+};
+
 // Hash password before saving
 userSchema.pre('save', async function () {
+  if (this.isModified('role') || this.isModified('plan') || !this.planLimits) {
+    this.resolveLimits();
+  }
   if (!this.isModified('password')) return;
   const salt = await bcrypt.genSalt(config.bcryptSaltRounds);
   this.password = await bcrypt.hash(this.password, salt);

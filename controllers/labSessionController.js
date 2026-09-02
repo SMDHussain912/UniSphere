@@ -39,6 +39,11 @@ const createSession = asyncHandler(async (req, res, next) => {
     return next(new AppError('You already have an active session. Stop it before starting a new one.', 400));
   }
 
+  const planLimits = req.user.planLimits || req.user.resolveLimits();
+  if (!req.user.hasPlan('pro') || planLimits.labSessions === 0) {
+    return next(new AppError('Lab sessions require a Pro plan. Upgrade to access cloud labs.', 403));
+  }
+
   const globalCount = await LabSession.countDocuments({ status: LabSession.STATUS_ACTIVE });
   if (globalCount >= config.labMaxSessions) {
     return next(new AppError('All lab sessions are in use. Try again shortly.', 429));

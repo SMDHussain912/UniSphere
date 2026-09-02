@@ -241,7 +241,7 @@ The user's profile becomes their professional identity:
 
 ---
 
-## Phase 10 — Monetization & Growth
+## Phase 10 — Monetization & Growth ✅ COMPLETED
 
 Three sides of the marketplace:
 
@@ -259,21 +259,23 @@ Three sides of the marketplace:
 ```
 
 ### Free
-Learning, basic practice, community, basic jobs, limited labs
+Learning, basic practice, community, basic jobs, limited labs (2 sessions, 50 runs/day)
 
-### Pro
-More execution time, private environments, advanced labs, AI mentor, advanced assessments, projects, skill analytics
+### Pro — $15/mo
+Unlimited learning, advanced labs (10 sessions, 500 runs/day), AI mentor, advanced assessments, projects, skill analytics
 
-### Companies
-Post jobs, post internships, skill-based candidate search, technical assessments, candidate screening, coding challenges
+### Companies — $99/mo
+Job postings, internships, skill-based candidate search, technical assessments, candidate screening, coding challenges
 
 ### Implementation
 
-- [ ] `models/Subscription.js`: userId, plan, status, expiresAt
-- [ ] `controllers/subscriptionController.js`: create, cancel, check limits
-- [ ] Feature gating middleware: check subscription level before allowing access
-- [ ] Company accounts: separate role with job posting and candidate search
-- [ ] `tests/subscription.test.js`: plan enforcement, feature gating
+- [x] `User` model: plan, planExpiresAt, planLimits, companyProfile fields with `resolveLimits()` and `hasPlan()` methods
+- [x] `controllers/subscriptionController.js`: plans, getMySubscription, subscribe, cancel, checkFeatureAccess
+- [x] `controllers/companyController.js`: searchCandidates, company profile CRUD, postJob, getMyJobs
+- [x] `middlewares/planGate.js`: requirePlan() and planLimits() middleware for feature gating
+- [x] `routes/subscriptionRoutes.js` + `routes/companyRoutes.js`: full REST API under `/api/v1/subscriptions` and `/api/v1/company`
+- [x] Feature gating wired into lab session controller (Pro required for labs)
+- [x] `tests/subscription.test.js`: 19/19 tests green — plan enforcement, feature gating, company access, expiry handling
 
 ---
 
@@ -292,3 +294,4 @@ Post jobs, post internships, skill-based candidate search, technical assessments
 | 2026-08-30 | Phase 8 — Communities & Chat | ✅ Done, suite green |
 | 2026-08-31 | Phase 9 — Gamification & Living Portfolio | ✅ Done, 13/13 gamification tests green |
 | 2026-08-31 | XP wired into all feature flows | ✅ Lessons +10/+50, quizzes +25/+40, exams +60, projects +100 with per-skill XP; ghost achievements fixed; full suite green |
+| 2026-09-02 | Phase 10 — Monetization & Growth | ✅ 19/19 subscription tests green; Free/Pro/Company tiers, feature gating middleware, company candidate search, plan expiry handling |

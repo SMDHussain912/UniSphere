@@ -26,6 +26,7 @@ const createUser = (firstname, phone) =>
     qualification: 'Degree',
     password: 'Test@1234',
     role: 'user',
+    plan: 'pro',
   });
 
 beforeAll(async () => {
