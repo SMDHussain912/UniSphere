@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Community = require('../models/Community');
 const Discussion = require('../models/Discussion');
 const AppError = require('../utils/AppError');
@@ -50,6 +51,23 @@ const createCommunity = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc    Get a single community (public)
+ * @route   GET /api/v1/community/communities/:slug
+ * @access  Public
+ */
+const getCommunity = asyncHandler(async (req, res, next) => {
+  const { slug } = req.params;
+  const isObjectId = mongoose.isValidObjectId(slug);
+  const community = await Community.findOne(
+    isObjectId ? { _id: slug } : { slug: (slug || '').toLowerCase() }
+  );
+  if (!community) {
+    return next(new AppError('Community not found', 404));
+  }
+  return success(res, { data: community });
+});
+
+/**
  * @desc    Get discussions (public listing)
  * @route   GET /api/v1/community/discussions
  * @access  Public
@@ -73,7 +91,11 @@ const getDiscussions = asyncHandler(async (req, res) => {
  * @access  Public
  */
 const getDiscussion = asyncHandler(async (req, res, next) => {
-  const discussion = await Discussion.findById(req.params.id)
+  const { id } = req.params;
+  const isObjectId = mongoose.isValidObjectId(id);
+  const discussion = await Discussion.findOne(
+    isObjectId ? { _id: id } : { slug: (id || '').toLowerCase() }
+  )
     .populate('authorId', 'fullname')
     .populate('answers.authorId', 'fullname');
 
@@ -115,7 +137,11 @@ const createDiscussion = asyncHandler(async (req, res, next) => {
  * @access  Private
  */
 const addAnswer = asyncHandler(async (req, res, next) => {
-  const discussion = await Discussion.findById(req.params.id);
+  const { id } = req.params;
+  const isObjectId = mongoose.isValidObjectId(id);
+  const discussion = await Discussion.findOne(
+    isObjectId ? { _id: id } : { slug: (id || '').toLowerCase() }
+  );
   if (!discussion) {
     return next(new AppError('Discussion not found', 404));
   }
@@ -134,6 +160,7 @@ const addAnswer = asyncHandler(async (req, res, next) => {
 
 module.exports = {
   getCommunities,
+  getCommunity,
   createCommunity,
   getDiscussions,
   getDiscussion,

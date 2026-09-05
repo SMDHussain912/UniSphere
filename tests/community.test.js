@@ -160,5 +160,49 @@ describe('discussions', () => {
       const res = await request(app).get(`/api/v1/community/discussions/${fake}`);
       expect(res.status).toBe(404);
     });
+describe('detail endpoints (id or slug)', () => {
+    it('fetches a community by slug', async () => {
+      await Community.create({ name: 'Node Guild', slug: 'node-guild', description: 'Node folks' });
+      const res = await request(app).get('/api/v1/community/communities/node-guild');
+      expect(res.status).toBe(200);
+      expect(res.body.data.name).toBe('Node Guild');
+    });
+
+    it('fetches a discussion by slug or by id', async () => {
+      const d = await Discussion.create({
+        title: 'Best practices for Express',
+        slug: 'best-practices-for-express',
+        category: 'Backend',
+        body: 'Share tips',
+        authorId: users.alice._id,
+      });
+
+      const bySlug = await request(app).get('/api/v1/community/discussions/best-practices-for-express');
+      expect(bySlug.status).toBe(200);
+      expect(bySlug.body.data.title).toBe('Best practices for Express');
+
+      const byId = await request(app).get(`/api/v1/community/discussions/${d._id}`);
+      expect(byId.status).toBe(200);
+      expect(byId.body.data.slug).toBe('best-practices-for-express');
+    });
+
+    it('answers are still addable when the discussion is reached by slug', async () => {
+      const d = await Discussion.create({
+        title: 'Docker networking',
+        slug: 'docker-networking',
+        category: 'DevOps',
+        body: 'bridge vs host',
+        authorId: users.alice._id,
+      });
+      const res = await request(app)
+        .post('/api/v1/community/discussions/docker-networking/answers')
+        .set('Authorization', `Bearer ${tokens.bob}`)
+        .send({ content: 'Use bridge for isolation' });
+      expect(res.status).toBe(201);
+      expect(res.body.data.answers.length).toBe(1);
+      const fresh = await Discussion.findById(d._id);
+      expect(fresh.answers.length).toBe(1);
+    });
+  });
   });
 });

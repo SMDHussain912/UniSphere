@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getCommunities,
+  getCommunity,
   createCommunity,
   getDiscussions,
   getDiscussion,
@@ -14,11 +15,13 @@ const {
   discussionValidator,
   answerValidator,
   discussionIdValidator,
+  communitySlugValidator,
 } = require('../validators/communityValidator');
 const validateRequest = require('../middlewares/validateRequest');
 
 // Public listings
 router.get('/communities', getCommunities);
+router.get('/communities/:slug', communitySlugValidator, validateRequest, getCommunity);
 router.get('/discussions', getDiscussions);
 router.get('/discussions/:id', discussionIdValidator, validateRequest, getDiscussion);
 

@@ -1,4 +1,8 @@
 const { body, param } = require('express-validator');
+const mongoose = require('mongoose');
+
+const isIdOrSlug = (value) =>
+  mongoose.isValidObjectId(value) || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
 
 const communityValidator = [
   body('name')
@@ -44,11 +48,18 @@ const answerValidator = [
     .withMessage('Answer cannot exceed 5000 characters'),
 ];
 
-const discussionIdValidator = [param('id').isMongoId().withMessage('Invalid discussion ID')];
+const discussionIdValidator = [
+  param('id').custom(isIdOrSlug).withMessage('Invalid discussion ID or slug'),
+];
+
+const communitySlugValidator = [
+  param('slug').custom(isIdOrSlug).withMessage('Invalid community ID or slug'),
+];
 
 module.exports = {
   communityValidator,
   discussionValidator,
   answerValidator,
   discussionIdValidator,
+  communitySlugValidator,
 };

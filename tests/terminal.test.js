@@ -170,7 +170,7 @@ describe('Terminal Gateway', () => {
     initTerminalGateway(server);
     await new Promise((resolve) => server.listen(0, resolve));
     port = server.address().port;
-  });
+  }, 600000);
 
   afterAll(async () => {
     for (const container of createdContainers) {

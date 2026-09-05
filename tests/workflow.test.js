@@ -45,7 +45,7 @@ beforeAll(async () => {
       (model) => model.init()
     )
   );
-});
+}, 600000);
 
 afterAll(async () => {
   await mongoose.connection.db.dropDatabase();

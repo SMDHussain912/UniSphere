@@ -35,7 +35,7 @@ beforeAll(async () => {
     [User, Snippet, LabSession].map((model) => model.init())
   );
   dockerAvailable = await dockerRunner.isDockerAvailable();
-});
+}, 600000);
 
 afterAll(async () => {
   await mongoose.connection.db.dropDatabase();

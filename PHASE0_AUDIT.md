@@ -223,6 +223,10 @@ PREVIOUS ITEM — DONE:
 24. **Community API** (`/community/communities`, `/community/discussions` GET public; POSTs auth-gated) — listings match the frontend contracts (`data.discussions`, `data.communities`, `answers.length` replies badge), authors populated as `fullname`
 25. **Tests**: `tests/chat.test.js` (8) + `tests/community.test.js` (7) — all pass with real MongoDB (15/15)
 
+✅ COMPLETED IN PHASE 13 (Community detail endpoints + test hardening):
+26. **Slug/ID detail endpoints** — `GET /community/communities/:slug`, `GET /community/discussions/:slug`, `POST /community/discussions/:slug/answers` accept either ObjectId or slug (accepts both; frontend `#/community/c/:slug` / `#/community/d/:slug` deep links now resolvable), validated by `isIdOrSlug` express-validator param rules; `addAnswer` unified to the same lookup; 3 new tests → community suite 10/10
+27. **Docker-suite hook hardening** — `beforeAll` in lab/terminal/workflow suites given explicit 600s hook timeouts so Docker Desktop cold start under machine contention can no longer false-fail the suites (lab 19/19 verified on warm daemon)
+
 PENDING (Phases 2-12):
 - Phase 2 — Verify all compiled language execution
 - Phase 3 — Docker security hardening
