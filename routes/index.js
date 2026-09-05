@@ -27,6 +27,8 @@ const gradingRoutes = require('./gradingRoutes');
 const gamificationRoutes = require('./gamificationRoutes');
 const subscriptionRoutes = require('./subscriptionRoutes');
 const companyRoutes = require('./companyRoutes');
+const chatRoutes = require('./chatRoutes');
+const communityRoutes = require('./communityRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/jobs', jobRoutes);
@@ -54,5 +56,7 @@ router.use('/admin', adminRoutes);
 router.use('/', gamificationRoutes);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/company', companyRoutes);
+router.use('/chat', chatRoutes);
+router.use('/community', communityRoutes);
 
 module.exports = router;

@@ -213,6 +213,16 @@ See C5 above.
 IN PROGRESS:
 - **Missing backend for `/chat/*` + `/community/*`** — frontend Messages/Community pages call endpoints that don't exist in the backend (404). Community degrades gracefully; Messages is fully broken. Backend does not even have Conversation/Message models.
 
+PREVIOUS ITEM — DONE:
+- **Chat + Community backend implemented**. See commit notes below.
+
+✅ COMPLETED IN PHASE 12 CONT ABSOLUTE (Chat & Community):
+21. **Conversation/Message models** (`Conversation`, `Message`) — 2-participant DMs, lastMessage preview, `{ conversationId, createdAt }` + `{ participants, updatedAt }` indexes
+22. **Chat API** (`/chat/conversations`, POST create/fetch, GET/POST `:id/messages`) — auth required for all, membership enforced on read/send (403 for outsiders), `fromMe` flags computed per viewer, empty messages rejected, participant email never exposed
+23. **Community/Discussion models** (`Community`, `Discussion` w/ answer subdocs) — unique slug auto-generation, `members` count, category indexes
+24. **Community API** (`/community/communities`, `/community/discussions` GET public; POSTs auth-gated) — listings match the frontend contracts (`data.discussions`, `data.communities`, `answers.length` replies badge), authors populated as `fullname`
+25. **Tests**: `tests/chat.test.js` (8) + `tests/community.test.js` (7) — all pass with real MongoDB (15/15)
+
 PENDING (Phases 2-12):
 - Phase 2 — Verify all compiled language execution
 - Phase 3 — Docker security hardening
