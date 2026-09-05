@@ -18,7 +18,7 @@ const getMySubmissions = asyncHandler(async (req, res) => {
 const getSubmission = asyncHandler(async (req, res, next) => {
   const submission = await ProjectSubmission.findById(req.params.id)
     .populate('projectId', 'title slug difficulty totalPoints testCriteria')
-    .populate('reviews.reviewerId', 'fullname email');
+    .populate('reviews.reviewerId', 'fullname');
   if (!submission) {
     return next(new AppError('Submission not found', 404));
   }
@@ -159,7 +159,14 @@ const getProjectSubmissions = asyncHandler(async (req, res) => {
   if (status) query.status = status;
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const [submissions, total] = await Promise.all([
-    ProjectSubmission.find(query).populate('userId', 'fullname email').sort({ score: -1 }).skip(skip).limit(parseInt(limit)),
+    ProjectSubmission.find(query)
+      // Public listing: never expose private source code, repo/demo URLs, test
+      // output, or reviews to other users.
+      .select('-code -repoUrl -demoUrl -testResults -reviews')
+      .populate('userId', 'fullname')
+      .sort({ score: -1, submittedAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit)),
     ProjectSubmission.countDocuments(query),
   ]);
   return success(res, {

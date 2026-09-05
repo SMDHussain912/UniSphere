@@ -14,7 +14,7 @@ router.get('/my/level', authenticate, getUserLevel);
 router.get('/my/achievements', authenticate, getUserAchievements);
 router.get('/leaderboard', getGlobalLeaderboard);
 router.get('/leaderboard/skill/:skillKey', getPerSkillLeaderboard);
-router.get('/portfolio/:userId', getPortfolio);
+router.get('/portfolio/:userId', authenticate, getPortfolio);
 router.get('/portfolio', authenticate, getPortfolio);
 
 module.exports = router;

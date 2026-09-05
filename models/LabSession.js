@@ -55,7 +55,7 @@ const labSessionSchema = new mongoose.Schema(
 );
 
 labSessionSchema.index({ userId: 1, status: 1 });
-labSessionSchema.index({ expiresAt: 1 });
+labSessionSchema.index({ status: 1, expiresAt: 1 });
 
 labSessionSchema.statics.STATUS_ACTIVE = STATUS_ACTIVE;
 labSessionSchema.statics.STATUS_STOPPED = STATUS_STOPPED;

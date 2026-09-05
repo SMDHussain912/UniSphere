@@ -10,6 +10,7 @@ const {
   getPublicSnippets,
 } = require('../controllers/codeLabController');
 const { authenticate } = require('../middlewares/authMiddleware');
+const { runCodeLimiter } = require('../middlewares/rateLimiters');
 const {
   runCodeValidator,
   snippetValidator,
@@ -18,7 +19,7 @@ const {
 } = require('../validators/labValidator');
 const validateRequest = require('../middlewares/validateRequest');
 
-router.post('/run', authenticate, runCodeValidator, validateRequest, runCode);
+router.post('/run', authenticate, runCodeLimiter, runCodeValidator, validateRequest, runCode);
 
 router.get('/snippets', authenticate, getMySnippets);
 router.get('/snippets/public', getPublicSnippets);

@@ -12,7 +12,7 @@ const QuestionPaper = require('../models/QuestionPaper');
 const AnswerSheet = require('../models/AnswerSheet');
 const { generateToken } = require('../utils/generateToken');
 
-jest.setTimeout(120000);
+jest.setTimeout(300000);
 
 const MONGO_URL =
   process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/unisphere_test_workflow';

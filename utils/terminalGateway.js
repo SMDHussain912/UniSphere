@@ -15,6 +15,7 @@ const CLOSE_LIMIT = 4007;
 
 const AUTH_TIMEOUT_MS = 10000;
 const MAX_INPUT_FRAME = 4096;
+const MAX_OUTPUT_BYTES = 5 * 1024 * 1024; // per connection – prevents memory exhaustion
 const BUCKET_CAPACITY = 60;
 const BUCKET_REFILL_PER_SEC = 25;
 const MAX_TERMINALS_PER_SESSION = 2;
@@ -159,10 +160,11 @@ const handleConnection = (wss, ws) => {
         return;
       }
 
-      let execResult;
+            let execResult;
       try {
         execResult = await dockerRunner.createTerminalExec({
           containerId: session.containerId,
+          userId: session.userId,
         });
       } catch (err) {
         logger.warn(`Terminal exec failed: ${err.message}`);
@@ -193,9 +195,30 @@ const handleConnection = (wss, ws) => {
       }, Math.max(0, session.expiresAt.getTime() - Date.now()));
 
       execResult.stream.on('data', (chunk) => {
-        if (!entry.closed && ws.readyState === ws.OPEN) {
-          ws.send(chunk, { binary: true });
+        if (entry.closed || ws.readyState !== ws.OPEN) return;
+        entry.outputBytes = (entry.outputBytes || 0) + chunk.length;
+        if (entry.outputBytes > MAX_OUTPUT_BYTES) {
+          sendJson(ws, { type: 'closed', reason: 'output_limit' });
+          closeTerminal(entry, CLOSE_LIMIT, 'output_limit');
+          return;
         }
+        // Backpressure guard: pause the docker stream while the socket is saturated
+        if (ws.bufferedAmount > MAX_OUTPUT_BYTES) {
+          execResult.stream.pause();
+          const check = setInterval(() => {
+            if (entry.closed) {
+              clearInterval(check);
+              return;
+            }
+            if (ws.readyState === ws.OPEN && ws.bufferedAmount < 1024 * 1024) {
+              clearInterval(check);
+              execResult.stream.resume();
+            }
+          }, 200);
+          check.unref?.();
+          return;
+        }
+        ws.send(chunk, { binary: true });
       });
       execResult.stream.on('error', () => {
         sendJson(ws, { type: 'closed', reason: 'stream_error' });

@@ -40,6 +40,6 @@ router.delete('/:id', authenticate, projectIdValidator, validateRequest, deleteP
 router.post('/:id/submit', authenticate, submissionValidator, validateRequest, submitProject);
 router.post('/submissions/:id/test', authenticate, projectIdValidator, validateRequest, runTests);
 router.post('/submissions/:id/review', authenticate, reviewValidator, validateRequest, addReview);
-router.get('/:id/submissions', projectIdValidator, validateRequest, getProjectSubmissions);
+router.get('/:id/submissions', authenticate, projectIdValidator, validateRequest, getProjectSubmissions);
 
 module.exports = router;

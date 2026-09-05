@@ -1,7 +1,7 @@
 {
-  "name": "unisphere-exam-jobs-api",
+  "name": "unisphere",
   "version": "2.1.0",
-  "description": "UniSphere Exam and Jobs Selection API - Backend",
+  "description": "UniSphere - Full Developer & Student Platform",
   "keywords": [
     "WebServer",
     "API",

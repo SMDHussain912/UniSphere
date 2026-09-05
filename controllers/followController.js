@@ -33,28 +33,28 @@ const unfollowUser = asyncHandler(async (req, res, next) => {
 
 const getFollowers = asyncHandler(async (req, res) => {
   const follows = await Follow.find({ followingId: req.params.id })
-    .populate('followerId', 'fullname email')
+    .populate('followerId', 'fullname')
     .sort({ createdAt: -1 });
   return success(res, { data: follows.map((f) => f.followerId) });
 });
 
 const getFollowing = asyncHandler(async (req, res) => {
   const follows = await Follow.find({ followerId: req.params.id })
-    .populate('followingId', 'fullname email')
+    .populate('followingId', 'fullname')
     .sort({ createdAt: -1 });
   return success(res, { data: follows.map((f) => f.followingId) });
 });
 
 const getMyFollowers = asyncHandler(async (req, res) => {
   const follows = await Follow.find({ followingId: req.user.id })
-    .populate('followerId', 'fullname email')
+    .populate('followerId', 'fullname')
     .sort({ createdAt: -1 });
   return success(res, { data: follows.map((f) => f.followerId) });
 });
 
 const getMyFollowing = asyncHandler(async (req, res) => {
   const follows = await Follow.find({ followerId: req.user.id })
-    .populate('followingId', 'fullname email')
+    .populate('followingId', 'fullname')
     .sort({ createdAt: -1 });
   return success(res, { data: follows.map((f) => f.followingId) });
 });

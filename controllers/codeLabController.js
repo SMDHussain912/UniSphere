@@ -6,6 +6,7 @@ const { success } = require('../utils/apiResponse');
 const asyncHandler = require('../middlewares/asyncHandler');
 
 const RUN_CONCURRENT = new Map();
+const RUN_PER_USER = new Map();
 
 const runCode = asyncHandler(async (req, res, next) => {
   if (!config.labEnabled) {
@@ -21,8 +22,15 @@ const runCode = asyncHandler(async (req, res, next) => {
     return next(new AppError('Server is at capacity. Try again shortly.', 429));
   }
 
-  const userId = req.user.id;
+    const userId = req.user.id;
+
+  // Per-user concurrency limit: prevent a single user from monopolizing execution
+  const userRunCount = RUN_PER_USER.get(userId) || 0;
+  if (userRunCount >= 3) {
+    return next(new AppError('Too many concurrent code executions. Please wait for one to finish.', 429));
+  }
   RUN_CONCURRENT.set(userId, true);
+  RUN_PER_USER.set(userId, userRunCount + 1);
 
   try {
     let result;
@@ -35,8 +43,14 @@ const runCode = asyncHandler(async (req, res, next) => {
       data: { output: result.output, language },
       message: 'Code executed successfully.',
     });
-  } finally {
+    } finally {
     RUN_CONCURRENT.delete(userId);
+    const remaining = (RUN_PER_USER.get(userId) || 1) - 1;
+    if (remaining <= 0) {
+      RUN_PER_USER.delete(userId);
+    } else {
+      RUN_PER_USER.set(userId, remaining);
+    }
   }
 });
 

@@ -125,59 +125,65 @@ const getPerSkillLeaderboard = asyncHandler(async (req, res) => {
 });
 
 const getPortfolio = asyncHandler(async (req, res, next) => {
-  const userId = req.params.userId || req.user.id;
+  // Allow viewing public portfolios via /portfolio/:userId
+  // If authenticated user's own portfolio, show all data
+  // If viewing another user's portfolio, hide email
+  const targetUserId = req.params.userId || req.user.id;
+  const isOwnPortfolio = req.user && targetUserId === req.user.id;
+  const selectFields = isOwnPortfolio
+    ? 'fullname email learningPoints points badges role createdAt'
+    : 'fullname learningPoints points badges role createdAt';
   const [user, profile, level, userSkills, submissions, achievements] = await Promise.all([
-    User.findById(userId).select('fullname email learningPoints points badges role createdAt'),
-    Profile.findOne({ userId }),
-    UserLevel.findOne({ userId }),
-    UserSkill.find({ userId, verified: true }),
-    ProjectSubmission.find({ userId, status: 'passed' })
+    User.findById(targetUserId).select(selectFields),
+    Profile.findOne({ userId: targetUserId }),
+    UserLevel.findOne({ userId: targetUserId }),
+    UserSkill.find({ userId: targetUserId, verified: true }),
+    ProjectSubmission.find({ userId: targetUserId, status: 'passed' })
       .populate('projectId', 'title slug difficulty skillKeys totalPoints')
       .sort('-updatedAt')
       .limit(20),
-    Achievement.find({ userId }).sort('-earnedAt'),
+    Achievement.find({ userId: targetUserId }).sort('-earnedAt'),
   ]);
   if (!user) return next(new AppError('User not found', 404));
   const verifiedSkills = userSkills
     .map((s) => ({ skillKey: s.skillKey, level: s.level, evidenceCount: s.evidence.length }))
     .filter((s) => s.level >= 60);
-  return success(res, {
-    data: {
-      user: {
-        fullname: user.fullname,
-        email: user.email,
-        role: user.role,
-        memberSince: user.createdAt,
-      },
-      profile,
-      stats: {
-        learningPoints: user.learningPoints,
-        totalXp: level?.xp || 0,
-        level: level?.level || 0,
-        levelName: level?.levelName || 'Novice',
-        badges: user.badges,
-        verifiedSkills,
-        projectsCompleted: submissions.length,
-        achievements: achievements.length,
-      },
-      projects: submissions.map((s) => ({
-        title: s.projectId?.title,
-        slug: s.projectId?.slug,
-        difficulty: s.projectId?.difficulty,
-        skills: s.projectId?.skillKeys || [],
-        score: s.score || 0,
-        totalPoints: s.projectId?.totalPoints || 0,
-        submittedAt: s.createdAt,
-      })),
-      achievements: achievements.slice(0, 12),
-      skillEvidence: userSkills.map((s) => ({
-        skillKey: s.skillKey,
-        level: s.level,
-        verified: s.verified,
-        evidenceCount: s.evidence.length,
-      })),
+  const response = {
+    user: {
+      fullname: user.fullname,
+      role: user.role,
+      memberSince: user.createdAt,
+      ...(isOwnPortfolio && { email: user.email }),
     },
-  });
+    profile,
+        stats: {
+      learningPoints: user.learningPoints,
+      totalXp: level?.xp || 0,
+      level: level?.level || 0,
+      levelName: level?.levelName || 'Novice',
+      badges: user.badges,
+      verifiedSkills,
+      projectsCompleted: submissions.length,
+      achievements: achievements.length,
+    },
+    projects: submissions.map((s) => ({
+      title: s.projectId?.title,
+      slug: s.projectId?.slug,
+      difficulty: s.projectId?.difficulty,
+      skills: s.projectId?.skillKeys || [],
+      score: s.score || 0,
+      totalPoints: s.projectId?.totalPoints || 0,
+      submittedAt: s.createdAt,
+    })),
+    achievements: achievements.slice(0, 12),
+    skillEvidence: userSkills.map((s) => ({
+      skillKey: s.skillKey,
+      level: s.level,
+      verified: s.verified,
+      evidenceCount: s.evidence.length,
+    })),
+  };
+  return success(res, { data: response });
 });
 
 module.exports = {

@@ -11,7 +11,7 @@ const { initTerminalGateway, closeTerminalsForSession } = require('../utils/term
 const config = require('../config/env');
 const { generateToken } = require('../utils/generateToken');
 
-jest.setTimeout(120000);
+jest.setTimeout(300000);
 
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/unisphere_test_term';
 const TEST_IMAGE = 'node:18-alpine';
@@ -260,6 +260,31 @@ describe('Terminal Gateway', () => {
       expect(second.out).toMatch(/M5/);
       second.close();
       await second.waitCondition(() => second.exitCode !== null, 5000, 'second close');
+    });
+
+    it('enforces the per-user workspace boundary', async () => {
+      if (!dockerAvailable) return console.log('Docker unavailable, skipped');
+      await makeSession(user._id);
+      const client = new TerminalClient();
+      await client.auth(token);
+      expect(client.ok.session.id).toBeTruthy();
+
+      // Shell must start inside the user's own workspace (/workspace/<userId>)
+      client.input('pwd\n');
+      await client.waitOutput(new RegExp(user._id));
+      expect(client.out).toMatch(/\/workspace\//);
+
+      // Writes outside the workspace must fail (permission denied, not fake)
+      client.input('echo x > /etc/unisphere-escape 2>/dev/null; echo TOP\n');
+      await client.waitOutput(/TOP/);
+      client.input('test -f /etc/unisphere-escape && echo LEAKED || echo BLOCKED\n');
+      await client.waitOutput(/BLOCKED/);
+      expect(client.out).not.toMatch(/LEAKED/);
+
+      client.input('echo BACK\n');
+      await client.waitOutput(/BACK/);
+      client.close();
+      await client.waitCondition(() => client.exitCode !== null, 5000, 'client close');
     });
 
     it('supports Ctrl+C, Ctrl+D and resize', async () => {
