@@ -11,6 +11,8 @@ const COLOR_SURFACE_BRIGHT = '#faf8ff'
 const COLOR_ON_SURFACE = '#131b2e'
 const COLOR_OUTLINE = '#777586'
 const COLOR_OUTLINE_VARIANT = '#c7c4d7'
+import { STAFF_ROLES } from './UI'
+import ThemeToggle from './ui/ThemeToggle'
 
 function NavLink({ to, children, className = '' }) {
   const path = useHashLocation()
@@ -90,6 +92,54 @@ export default function Navbar() {
               </a>
               <NavLink to="/profile" className="username-link">{name}</NavLink>
               <button type="button" className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+    <>
+      <nav className="navbar">
+        <div className="container nav-inner">
+          <a href="#/" className="brand">
+            <span className="mark">U</span> UniSphere
+          </a>
+          <button type="button" className="nav-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {mobileOpen ? <><path d="M18 6L6 18" /><path d="M6 6l12 12" /></> : <><path d="M3 12h18" /><path d="M3 6h18" /><path d="M3 18h18" /></>}
+            </svg>
+          </button>
+          <div className="nav-links">
+            <Dropdown label="Learn">
+              <a href="#/courses">Courses</a>
+              <a href="#/exams">Assessments</a>
+              <a href="#/skills">Skills</a>
+            </Dropdown>
+            <Dropdown label="Practice">
+              <a href="#/code">Code Lab</a>
+              <a href="#/projects">Projects</a>
+              <a href="#/challenges">Challenges</a>
+            </Dropdown>
+            <Dropdown label="Career">
+              <a href="#/jobs">Jobs</a>
+              <a href="#/internships">Internships</a>
+            </Dropdown>
+            <a href="#/community">Community</a>
+            <a href="#/office" onClick={() => setMobileOpen(false)}>Office</a>
+            <a href="#/database" onClick={() => setMobileOpen(false)}>Database</a>
+            <a href="#/api-tools" onClick={() => setMobileOpen(false)}>API Tools</a>
+            <a href="#/careers" onClick={() => setMobileOpen(false)}>Careers</a>
+            <a href="#/leaderboard">Leaderboard</a>
+            {isStaff && <a href="#/admin">Workspace</a>}
+          </div>
+          <div className="nav-right">
+            <ThemeToggle />
+            {user ? (
+              <>
+                <a href="#/achievements" className="nav-link-icon" title="Achievements">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M6 9H4.5a2.5 2.5 0 010-5H6" /><path d="M18 9h1.5a2.5 2.5 0 000-5H18" /><path d="M4 22h16" />
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                    <path d="M18 2H6v7a6 6 0 0012 0V2z" />
+                  </svg>
+                </a>
+                <NavLink to="/profile" className="username">{name}</NavLink>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+              </>
             ) : (
               <>
                 <NavLink to="/login">Login</NavLink>
