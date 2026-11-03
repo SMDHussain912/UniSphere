@@ -135,14 +135,6 @@ const handleConnection = (wss, ws) => {
       }
       entry.sessionId = session._id;
       entry.userId = user._id;
-      entry.ttlTimer = setTimeout(async () => {
-        sendJson(ws, { type: 'closed', reason: 'session_expired' });
-        closeTerminal(entry, CLOSE_EXPIRED, 'session_expired');
-        try {
-          const fresh = await LabSession.findById(session._id);
-          if (fresh && isActive(fresh)) await expireSession(fresh);
-        } catch (_) {}
-      }, Math.max(0, session.expiresAt.getTime() - Date.now()));
       const execResult = await dockerRunner.createTerminalExec({
         containerId: session.containerId,
         userId: user._id,
@@ -154,18 +146,36 @@ const handleConnection = (wss, ws) => {
       entry.sessionType = session.sessionType;
       entry.workspacePath = execResult.workspacePath;
       entry.authenticated = true;
-      const set = registry.get(entry.sessionId);
-      if (!set) {
-        registry.set(entry.sessionId, new Set());
-        entry.ttlTimer = setTimeout(async () => {
-          sendJson(ws, { type: 'closed', reason: 'session_expired' });
-          closeTerminal(entry, CLOSE_EXPIRED, 'session_expired');
-          try {
-            const fresh = await LabSession.findById(session._id);
-            if (fresh && isActive(fresh)) await expireSession(fresh);
-          } catch (_) {}
-        }, Math.max(0, session.expiresAt.getTime() - Date.now()));
+      entry.registrySet = registry.get(entry.sessionId);
+      if (!entry.registrySet) {
+        entry.registrySet = new Set();
+        registry.set(entry.sessionId, entry.registrySet);
       }
+      entry.registrySet.add(entry);
+      if (entry.registrySet.size > MAX_TERMINALS_PER_SESSION) {
+        // Remove the oldest terminal (excluding the current one just added)
+        const terminals = Array.from(entry.registrySet);
+        for (const terminal of terminals) {
+          if (terminal !== entry) {
+            closeTerminal(terminal, CLOSE_LIMIT, 'terminal_limit');
+            break;
+          }
+        }
+      }
+      entry.ttlTimer = setTimeout(async () => {
+        sendJson(ws, { type: 'closed', reason: 'session_expired' });
+        closeTerminal(entry, CLOSE_EXPIRED, 'session_expired');
+        try {
+          const fresh = await LabSession.findById(session._id);
+          if (fresh && isActive(fresh)) await expireSession(fresh);
+        } catch (_) {}
+      }, Math.max(0, session.expiresAt.getTime() - Date.now()));
+      // Token bucket refill: starts once per connection, cleaned up by closeTerminal
+      entry.bucketTimer = setInterval(() => {
+        if (!entry.closed) {
+          entry.bucket = Math.min(BUCKET_CAPACITY, entry.bucket + BUCKET_REFILL_PER_SEC);
+        }
+      }, 1000);
       if (execResult.stream) {
         execResult.stream.on('data', (chunk) => {
           if (entry.closed || ws.readyState !== ws.OPEN) return;

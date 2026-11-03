@@ -47,7 +47,7 @@ router.use('/skills', skillGraphRoutes);
 router.use('/my/skills', userSkillRoutes);
 router.use('/lab', labSessionRoutes);
 router.use('/code', codeLabRoutes);
-router.use("/api/v1/ai", aiRoutes);
+router.use("/ai", aiRoutes);
 router.use('/projects', projectRoutes);
 router.use('/match', matchRoutes);
 router.use('/admin/exam-centers', examCenterRoutes);
