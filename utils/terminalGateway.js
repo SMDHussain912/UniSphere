@@ -48,7 +48,8 @@ const closeTerminal = (entry, code, reason) => {
 };
 
 const closeTerminalsForSession = (sessionId) => {
-  const set = registry.get(String(sessionId));
+  const key = String(sessionId);
+  const set = registry.get(key);
   if (!set) return 0;
   const entries = Array.from(set);
   for (const entry of entries) {
@@ -133,8 +134,8 @@ const handleConnection = (wss, ws) => {
         closeTerminal(entry, CLOSE_NO_SESSION, 'no_active_session');
         return;
       }
-      entry.sessionId = session._id;
-      entry.userId = user._id;
+      entry.sessionId = String(session._id);
+      entry.userId = String(user._id);
       const execResult = await dockerRunner.createTerminalExec({
         containerId: session.containerId,
         userId: user._id,
