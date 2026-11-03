@@ -28,4 +28,9 @@ router.get('/snippets/:id', authenticate, snippetIdValidator, validateRequest, g
 router.put('/snippets/:id', authenticate, snippetIdValidator, validateRequest, snippetUpdateValidator, validateRequest, updateSnippet);
 router.delete('/snippets/:id', authenticate, snippetIdValidator, validateRequest, deleteSnippet);
 
+router.get('/languages', authenticate, (req, res) => {
+  const dr = require('../utils/dockerRunner');
+  res.json({ languages: Object.keys(dr.LANGUAGE_IMAGES) });
+});
+
 module.exports = router;

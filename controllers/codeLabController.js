@@ -2,7 +2,9 @@ const config = require('../config/env');
 const dockerRunner = require('../utils/dockerRunner');
 const Snippet = require('../models/Snippet');
 const AppError = require('../utils/AppError');
+const logger = require('./logger');
 const { success } = require('../utils/apiResponse');
+const { logInfo, logError } = require('../utils/logger');
 const asyncHandler = require('../middlewares/asyncHandler');
 
 const RUN_CONCURRENT = new Map();
@@ -15,6 +17,10 @@ const runCode = asyncHandler(async (req, res, next) => {
 
   const { language, code, input } = req.body;
   if (!code || typeof code !== 'string') {
+   // Validate code length to prevent abuse
+   if (code.length > 10000) {
+     return next(new AppError('Code too long. Maximum 10000 characters.', 400));
+   }
     return next(new AppError('Code is required', 400));
   }
 

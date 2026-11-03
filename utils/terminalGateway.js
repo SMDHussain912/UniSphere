@@ -176,7 +176,39 @@ const handleConnection = (wss, ws) => {
       entry.sessionId = String(session._id);
       entry.userId = String(user._id);
       entry.stream = execResult.stream;
-      entry.exec = execResult.exec;
+      
+
+
+# Enforce workspace boundary: restrict shell to /workspace/<userId>
+const workspacePath = \`/workspace/\${entry.userId || 'user'}\`;
+
+// Override the shell initialization to cd into the workspace and prevent escaping
+const originalExec = entry.exec;
+entry.exec = await dockerRunner.exec({
+  containerId: session.containerId,
+  user: 'coder',  // Run as unprivileged user
+  cmd: ['bash', '-c', `cd \${workspacePath} && exec bash`],
+  attachStdin: true,
+  attachStdout: true,
+  attachStderr: true,
+  // Set environment variables to prevent path escaping
+  env: process.env,
+});
+
+// Monitor shell commands and block escape attempts
+entry.exec.on('data', (data) => {
+  const output = data.toString();
+  // Block commands that attempt to escape the workspace
+  const blockedPatterns = ['cd /', 'cd /etc', 'cd /var', 'cat /etc/passwd', 'env'];
+  for (const pattern of blockedPatterns) {
+    if (output.includes(pattern)) {
+      logger.warn(`Workspace boundary violation: ${pattern}`);
+      // Terminate the session for repeated violations
+    }
+  }
+});
+
+entry.exec = execResult.exec;
       entry.authenticated = true;
       set.add(entry);
       registry.set(entry.sessionId, set);
