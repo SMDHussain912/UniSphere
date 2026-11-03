@@ -67,7 +67,6 @@
   --info: var(--color-info);
   --info-bg: var(--color-info-soft);
   --radius: var(--radius-md);
-  --radius-lg: var(--radius-lg);
   --shadow: var(--shadow-sm);
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
