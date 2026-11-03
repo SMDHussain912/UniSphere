@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useHashLocation, navigate } from '../router'
 import { useAuth } from '../auth/AuthContext'
 import { STAFF_ROLES } from './UI'
+import ThemeToggle from './ui/ThemeToggle'
 
 function NavLink({ to, children, className = '' }) {
   const path = useHashLocation()
@@ -75,6 +76,7 @@ export default function Navbar() {
             {isStaff && <a href="#/admin">Workspace</a>}
           </div>
           <div className="nav-right">
+            <ThemeToggle />
             {user ? (
               <>
                 <a href="#/achievements" className="nav-link-icon" title="Achievements">
