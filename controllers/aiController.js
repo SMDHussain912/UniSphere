@@ -1,3 +1,4 @@
+const asyncHandler = require('../middlewares/asyncHandler');
 const axios = require('axios');
 const { success, error } = require('../utils/apiResponse');
 const { logInfo, logError } = require('../utils/logger');
