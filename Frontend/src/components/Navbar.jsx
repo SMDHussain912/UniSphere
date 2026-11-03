@@ -1,6 +1,16 @@
 import { useState } from 'react'
 import { useHashLocation, navigate } from '../router'
 import { useAuth } from '../auth/AuthContext'
+
+// Design tokens from Syntropic Precision system
+const COLOR_PRIMARY = '#2a14b4'
+const COLOR_SECONDARY = '#0051d5'
+const COLOR_TERTIARY = '#0d9488'
+const COLOR_SURFACE = '#faf8ff'
+const COLOR_SURFACE_BRIGHT = '#faf8ff'
+const COLOR_ON_SURFACE = '#131b2e'
+const COLOR_OUTLINE = '#777586'
+const COLOR_OUTLINE_VARIANT = '#c7c4d7'
 import { STAFF_ROLES } from './UI'
 import ThemeToggle from './ui/ThemeToggle'
 
@@ -8,7 +18,7 @@ function NavLink({ to, children, className = '' }) {
   const path = useHashLocation()
   const active = path === to || (to !== '/' && path.startsWith(`${to}/`))
   return (
-    <a href={`#${to}`} className={`${className} ${active ? 'active' : ''}`}>
+    <a href="#" className={`${className} ${active ? 'active' : ''}`}>
       {children}
     </a>
   )
@@ -32,7 +42,7 @@ function Dropdown({ label, children }) {
 export default function Navbar() {
   const { user, logout } = useAuth()
   const name = user ? user.fullname?.firstname || user.email : ''
-  const isStaff = user && STAFF_ROLES.includes(user.role)
+  const isStaff = user && /* STAFF_ROLES */ ['admin', 'instructor'].includes(user.role)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = () => {
@@ -41,6 +51,47 @@ export default function Navbar() {
   }
 
   return (
+    <nav className="navbar bg-surface surface-variant">
+      <div className="container nav-inner max-w-7xl mx-auto">
+        <a href="#/" className="brand">
+          <span className="mark">U</span> UniSphere
+        </a>
+        <button type="button" className="nav-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {mobileOpen ? <><path d="M18 6L6 18" /><path d="M6 6l12 12" /></> : <><path d="M3 12h18" /><path d="M3 6h18" /><path d="M3 18h18" /></>}
+          </svg>
+        </button>
+        <div className="nav-links">
+          <Dropdown label="Learn">
+            <a href="#/courses">Courses</a>
+            <a href="#/exams">Assessments</a>
+            <a href="#/skills">Skills</a>
+          </Dropdown>
+          <Dropdown label="Practice">
+            <a href="#/code">Code Lab</a>
+            <a href="#/projects">Projects</a>
+            <a href="#/challenges">Challenges</a>
+          </Dropdown>
+          <Dropdown label="Career">
+            <a href="#/jobs">Jobs</a>
+            <a href="#/internships">Internships</a>
+          </Dropdown>
+          <a href="#/community">Community</a>
+          <a href="#/office" onClick={() => setMobileOpen(false)}>Office</a>
+          <a href="#/leaderboard">Leaderboard</a>
+          {isStaff && <a href="#/admin">Workspace</a>}
+        </div>
+        <div className="nav-right">
+          {user ? (
+            <>
+              <a href="#/achievements" className="nav-link-icon" title="Achievements">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M6 9H4.5a2.5 2.5 0 010-5H6" /><path d="M18 9h1.5a2.5 2.5 0 000-5H18" /><path d="M4 22h16" />
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0012 0V2z" />
+                </svg>
+              </a>
+              <NavLink to="/profile" className="username-link">{name}</NavLink>
+              <button type="button" className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
     <>
       <nav className="navbar">
         <div className="container nav-inner">
@@ -112,7 +163,9 @@ export default function Navbar() {
       )}
       <div className="mobile-nav">
         <a href="#/" className={useHashLocation() === '/' ? 'active' : ''}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
           Home
         </a>
         <a href="#/courses"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" /><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" /></svg>Learn</a>
