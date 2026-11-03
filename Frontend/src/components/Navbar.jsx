@@ -66,13 +66,11 @@ export default function Navbar() {
               <a href="#/jobs">Jobs</a>
               <a href="#/internships">Internships</a>
             </Dropdown>
-            <a href="#/community">
-            <a href="#/office" onClick={() =>
+            <a href="#/community">Community</a>
+            <a href="#/office" onClick={() => setMobileOpen(false)}>Office</a>
             <a href="#/database" onClick={() => setMobileOpen(false)}>Database</a>
             <a href="#/api-tools" onClick={() => setMobileOpen(false)}>API Tools</a>
             <a href="#/careers" onClick={() => setMobileOpen(false)}>Careers</a>
- setMobileOpen(false)}>Office</a>
-Community</a>
             <a href="#/leaderboard">Leaderboard</a>
             {isStaff && <a href="#/admin">Workspace</a>}
           </div>
