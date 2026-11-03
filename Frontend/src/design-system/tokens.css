@@ -43,6 +43,32 @@
   --motion-normal: 200ms ease;
   --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Backward-compatible aliases for existing page styles. */
+  --primary: #111827;
+  --primary-light: #1e293b;
+  --indigo: #4338ca;
+  --blue: #2563eb;
+  --violet: #7c3aed;
+  --bg: var(--color-canvas);
+  --surface: var(--color-surface);
+  --surface-hover: var(--color-surface-muted);
+  --border: var(--color-border);
+  --border-light: var(--color-surface-muted);
+  --text: var(--color-text);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --muted: var(--color-text-muted);
+  --success: var(--color-success);
+  --success-bg: var(--color-success-soft);
+  --danger: var(--color-danger);
+  --danger-bg: var(--color-danger-soft);
+  --warning: var(--color-warning);
+  --warning-bg: var(--color-warning-soft);
+  --info: var(--color-info);
+  --info-bg: var(--color-info-soft);
+  --radius: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --shadow: var(--shadow-sm);
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
 [data-theme='dark'] {
@@ -69,6 +95,11 @@
   --color-danger-soft: #451c27;
   --color-info: #60a5fa;
   --color-info-soft: #172f50;
+  --primary: #0b1120;
+  --primary-light: #111827;
+  --indigo: #818cf8;
+  --blue: #60a5fa;
+  --violet: #a78bfa;
   --shadow-xs: 0 1px 2px rgb(0 0 0 / 20%);
   --shadow-sm: 0 1px 3px rgb(0 0 0 / 25%);
   --shadow-md: 0 8px 24px rgb(0 0 0 / 30%);
