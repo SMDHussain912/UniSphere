@@ -98,6 +98,7 @@ const handleConnection = (wss, ws) => {
     bucket: BUCKET_CAPACITY,
     closed: false,
     authenticated: false,
+    authenticating: false,
   };
   entry.authTimer = setTimeout(() => {
     closeTerminal(entry, CLOSE_UNAUTHENTICATED, 'auth_timeout');
