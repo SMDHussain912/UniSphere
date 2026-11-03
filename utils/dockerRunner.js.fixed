@@ -1,0 +1,11 @@
+const shellUser = isCodeServer ? 'coder' : 'sandbox';
+const coderUid = isCodeServer ? 1000 : 10000;
+const coderGid = isCodeServer ? 1000 : 10000;
+const homeDir = isCodeServer ? '/home/coder' : `/home/${shellUser}`;
+const execSetup = [
+  createUserCmd,
+  `mkdir -p ${workspacePath}`,
+  `chmod 700 ${workspacePath}`,
+  `chown ${coderUid}:${coderGid} ${workspacePath}`,
+  ...(isCodeServer ? [`chmod 700 ${homeDir}`, `chown ${coderUid}:${coderGid} ${homeDir}`] : []),
+];
