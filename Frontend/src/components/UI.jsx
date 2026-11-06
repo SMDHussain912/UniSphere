@@ -1,241 +1,351 @@
-import { useState, useEffect, useRef } from 'react'
-import { navigate } from '../router'
+import { cloneElement, isValidElement, useId } from 'react'
+import { useHashLocation } from '../router'
 import { useAuth } from '../auth/AuthContext'
+import { LabTerminal } from './Terminal'
 
-// Design tokens from Syntropic Precision system
-const COLOR_PRIMARY = '#2a14b4'
-const COLOR_SECONDARY = '#0051d5'
-const COLOR_TERTIARY = '#0d9488'
-const COLOR_SURFACE = '#faf8ff'
-const COLOR_SURFACE_BRIGHT = '#faf8ff'
-const COLOR_ON_SURFACE = '#131b2e'
-const COLOR_OUTLINE = '#777586'
-const COLOR_OUTLINE_VARIANT = '#c7c4d7'
-const RADIUS_SM = '0.25rem'
-const RADIUS_MD = '0.5rem'
-const RADIUS_LG = '0.75rem'
+// Staff roles used throughout the application.
+export const STAFF_ROLES = ['admin', 'manager', 'supervisor']
 
-function NavLink({ to, children, className = '' }) {
-  const path = useHashLocation()
-  const active = path === to || (to !== '/' && path.startsWith(`${to}/`))
-  return (
-    <a href="#" className={`${className} ${active ? 'active' : ''}`}>
-      {children}
-    </a>
-  )
-}
-
-function Dropdown({ label, children }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="dropdown" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button type="button" className="dropdown-toggle" onClick={() => setOpen(!open)}>
-        {label}
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style={{ marginLeft: 4, opacity: 0.6 }}>
-          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        </svg>
-      </button>
-      {open && <div className="dropdown-menu">{children}</div>}
-    </div>
-  )
-}
-
+// Loading components
 export function Loader() {
   return <div className="loader" />
 }
 
 export function Spinner({ size = 16 }) {
-  return <div className="spinner" style={{ width: size, height: size }} />
+  return (
+    <div
+      className="spinner"
+      style={{ width: size, height: size }}
+    />
+  )
 }
 
+// Avatar component
 export function Avatar({ src, name, size = 32 }) {
-  const initials = name?.split(' ').map((n) => n[0]).join('').toUpperCase() || '?'
+  const initials =
+    name?.split(' ').map((n) => n[0]).join('').toUpperCase() || '?'
+
   if (src) {
-    return <img src={src} alt={name || 'avatar'} className="avatar" style={{ width: size, height: size, borderRadius: '50%' }} />
+    return (
+      <img
+        src={src}
+        alt={name || 'avatar'}
+        className="avatar"
+        style={{
+          width: size,
+          height: size,
+          borderRadius: '50%',
+        }}
+      />
+    )
   }
+
   return (
-    <div className="avatar" style={{ width: size, height: size, borderRadius: '50%' }} title={name || ''}>
+    <div
+      className="avatar"
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+      }}
+      title={name || ''}
+    >
       <span className="avatar-text">{initials}</span>
     </div>
   )
 }
 
+// Progress bar
 export function ProgressBar({ value, label, small }) {
   const pct = Math.min(100, Math.max(0, value || 0))
+
   return (
     <div className={small ? 'progress-compact' : 'progress'}>
       {label && <div className="progress-label">{label}</div>}
+
       <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${pct}%` }} />
+        <div
+          className="progress-fill"
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   )
 }
 
+// Code editor
 export function Editor({ code, onChange, language }) {
   return (
     <textarea
       className="code-editor"
       value={code}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(event) => onChange(event.target.value)}
       spellCheck="false"
       data-language={language}
     />
   )
 }
 
-export function VirtualTerminal() {
-  return <LabTerminal />
+// Real Linux lab terminal
+export function VirtualTerminal({ onStopped }) {
+  return <LabTerminal onStopped={onStopped} />
 }
 
+// Modal
 export function Modal({ show, onClose, title, children }) {
   if (!show) return null
+
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="modal-header">
           <h3 className="modal-title">{title}</h3>
-          <button type="button" className="modal-close" onClick={onClose}>×</button>
+
+          <button
+            type="button"
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            ×
+          </button>
         </div>
+
         <div className="modal-body">{children}</div>
       </div>
     </div>
   )
 }
 
+// Tooltip
 export function Tooltip({ text, children }) {
-  return <span className="tooltip" data-tip={text}>{children}</span>
+  return (
+    <span className="tooltip" data-tip={text}>
+      {children}
+    </span>
+  )
 }
 
+// URL search parameters hook
 export function useSearchParams() {
   const path = useHashLocation()
-  const segs = path.split('/').filter(Boolean)
-  const id = segs[1]
-  return { id }
+  const segments = path.split('/').filter(Boolean)
+
+  return {
+    id: segments[1],
+  }
 }
 
+// Badge
 export function Badge({ kind = 'muted', children }) {
-  return <span className={`badge badge-${kind}`}>{children}</span>
+  return (
+    <span className={`badge badge-${kind}`}>
+      {children}
+    </span>
+  )
 }
 
+// Alert
 export function Alert({ kind = 'error', children }) {
   if (!children) return null
-  return <div className={`alert alert-${kind}`}>{children}</div>
+
+  return (
+    <div className={`alert alert-${kind}`}>
+      {children}
+    </div>
+  )
 }
 
+// Pagination
 export function Pagination({ page, totalPages, onChange }) {
   if (!totalPages || totalPages <= 1) return null
-  const pages = []
-  for (let i = 1; i <= totalPages; i += 1) pages.push(i)
+
+  const pages = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1
+  )
+
   return (
     <div className="pagination">
-      <button type="button" className="page-btn" disabled={page <= 1} onClick={() => onChange(page - 1)}>
+      <button
+        type="button"
+        className="page-btn"
+        disabled={page <= 1}
+        onClick={() => onChange(page - 1)}
+      >
         Prev
       </button>
-      {pages.map((p) => (
+
+      {pages.map((currentPage) => (
         <button
           type="button"
-          key={p}
-          className={`page-btn ${p === page ? 'active' : ''}`}
-          onClick={() => onChange(p)}
+          key={currentPage}
+          className={`page-btn ${
+            currentPage === page ? 'active' : ''
+          }`}
+          onClick={() => onChange(currentPage)}
+          aria-current={currentPage === page ? 'page' : undefined}
         >
-          {p}
+          {currentPage}
         </button>
       ))}
-      <button type="button" className="page-btn" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
+
+      <button
+        type="button"
+        className="page-btn"
+        disabled={page >= totalPages}
+        onClick={() => onChange(page + 1)}
+      >
         Next
       </button>
     </div>
   )
 }
 
-// Staff roles for role-based access control
-export const STAFF_ROLES = ['admin', 'manager', 'supervisor'];
+// Reusable form field
+export function Field({ label, children, className = '', ...props }) {
+  const generatedId = useId()
 
-// Field component - renders a labeled form field
-export function Field({ label, children, ...props }) {
+  const control = isValidElement(children)
+    ? cloneElement(children, {
+        id: children.props.id || generatedId,
+      })
+    : children
+
   return (
-    <div className="field">
-      <label className="field-label" htmlFor={label}>{label}</label>
-      <div className="field-content">{children}</div>
+    <div
+      className={`field ${className}`.trim()}
+      {...props}
+    >
+      <label
+        className="field-label"
+        htmlFor={generatedId}
+      >
+        {label}
+      </label>
+
+      <div className="field-content">
+        {control}
+      </div>
     </div>
-  );
+  )
 }
 
-// CaptchaField component - renders a captcha input
-export function CaptchaField({ value, onChange }) {
+// CAPTCHA input
+export function CaptchaField({
+  value = '',
+  onChange,
+  id,
+  ...props
+}) {
   return (
     <div className="captcha-field">
-      <input 
-        className="captcha-input" 
-        type="text" 
-        value={value} 
-        onChange={onChange} 
+      <input
+        id={id}
+        className="captcha-input"
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         placeholder="Enter captcha code"
+        autoComplete="off"
+        aria-label="Enter captcha code"
+        {...props}
       />
     </div>
-  );
+  )
 }
 
-// EmptyState component - displays a state with no items
-export function EmptyState({ label = 'No items', icon = 'grid' }) {
+// Empty state
+export function EmptyState({
+  label = 'No items',
+  icon = 'grid',
+}) {
   return (
-    <div className="empty-state">
+    <div className="empty-state" data-icon={icon}>
       <div className="empty-state-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2L2 10L12 18L22 10L12 2Z"/>
-          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="4"/>
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 2L2 10L12 18L22 10L12 2Z" />
+          <circle cx="12" cy="12" r="10" fill="none" strokeWidth="1" />
         </svg>
       </div>
+
       <h3 className="empty-state-title">{label}</h3>
     </div>
-  );
+  )
 }
 
-// formatDate helper - formats a date string
+// Date formatter
 export function formatDate(dateString) {
   const date = new Date(dateString)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return date.toLocaleDateString(undefined, options)
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Invalid date'
+  }
+
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
-// RequireAuth component - protects routes requiring authentication
+// Authentication route guard
 export function RequireAuth({ children }) {
   const { user, loading } = useAuth()
-  if (loading) return null
-  if (!user) return null
+
+  if (loading || !user) return null
+
   return children
 }
 
-// RequireAdmin component - protects admin routes
+// Admin route guard
 export function RequireAdmin({ children }) {
-  const { user } = useAuth()
-  if (!user || user.role !== 'admin') return null
+  const { user, loading } = useAuth()
+
+  if (loading || !user || user.role !== 'admin') {
+    return null
+  }
+
   return children
 }
 
-// AdminTabs component - displays admin navigation tabs
+// Admin tabs
 export function AdminTabs({ children }) {
   return (
     <nav className="admin-tabs">
-      <ul>
-        {children}
-      </ul>
+      <ul>{children}</ul>
     </nav>
-  );
+  )
 }
 
-// RequireRole component - protects routes with specific role requirement
+// Role-based route guard
 export function RequireRole({ role, children }) {
-  const { user } = useAuth()
-  if (!user || user.role !== role) return null
+  const { user, loading } = useAuth()
+
+  if (loading || !user || user.role !== role) {
+    return null
+  }
+
   return children
 }
 
-// Role labels mapping
+// Role labels
 export const ROLE_LABELS = {
   admin: 'Administrator',
   manager: 'Manager',
   supervisor: 'Supervisor',
-  user: 'User'
+  user: 'User',
 }
