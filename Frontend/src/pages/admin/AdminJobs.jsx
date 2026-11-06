@@ -26,7 +26,6 @@ function Section() {
   const [busy, setBusy] = useState(false)
 
   const load = () => {
-    setLoading(true)
     api
       .get('/jobs?limit=100')
       .then((res) => setItems(res.data.jobs))
