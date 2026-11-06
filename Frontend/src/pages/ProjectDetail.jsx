@@ -19,8 +19,6 @@ export default function ProjectDetail({ slug }) {
   const [notice, setNotice] = useState('')
 
   const load = () => {
-    setLoading(true)
-    setError('')
     api
       .get(`/projects/${slug}`)
       .then(async (res) => {
