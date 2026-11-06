@@ -21,10 +21,10 @@ export async function request(path, options = {}) {
     body,
   })
 
-  let data = {}
+  let data
   try {
     data = await res.json()
-  } catch (err) {
+  } catch {
     data = {}
   }
 
