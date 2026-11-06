@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { api } from '../../api'
 import { Badge, Editor, VirtualTerminal } from '../../components/UI'
 
