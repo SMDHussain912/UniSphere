@@ -141,10 +141,101 @@ export function Pagination({ page, totalPages, onChange }) {
         >
           {p}
         </button>
-      )}
+      ))}
       <button type="button" className="page-btn" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
         Next
       </button>
     </div>
   )
+}
+
+// Staff roles for role-based access control
+export const STAFF_ROLES = ['admin', 'manager', 'supervisor'];
+
+// Field component - renders a labeled form field
+export function Field({ label, children, ...props }) {
+  return (
+    <div className="field">
+      <label className="field-label" htmlFor={label}>{label}</label>
+      <div className="field-content">{children}</div>
+    </div>
+  );
+}
+
+// CaptchaField component - renders a captcha input
+export function CaptchaField({ value, onChange }) {
+  return (
+    <div className="captcha-field">
+      <input 
+        className="captcha-input" 
+        type="text" 
+        value={value} 
+        onChange={onChange} 
+        placeholder="Enter captcha code"
+      />
+    </div>
+  );
+}
+
+// EmptyState component - displays a state with no items
+export function EmptyState({ label = 'No items', icon = 'grid' }) {
+  return (
+    <div className="empty-state">
+      <div className="empty-state-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2L2 10L12 18L22 10L12 2Z"/>
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="4"/>
+        </svg>
+      </div>
+      <h3 className="empty-state-title">{label}</h3>
+    </div>
+  );
+}
+
+// formatDate helper - formats a date string
+export function formatDate(dateString) {
+  const date = new Date(dateString)
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return date.toLocaleDateString(undefined, options)
+}
+
+// RequireAuth component - protects routes requiring authentication
+export function RequireAuth({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (!user) return null
+  return children
+}
+
+// RequireAdmin component - protects admin routes
+export function RequireAdmin({ children }) {
+  const { user } = useAuth()
+  if (!user || user.role !== 'admin') return null
+  return children
+}
+
+// AdminTabs component - displays admin navigation tabs
+export function AdminTabs({ children }) {
+  return (
+    <nav className="admin-tabs">
+      <ul>
+        {children}
+      </ul>
+    </nav>
+  );
+}
+
+// RequireRole component - protects routes with specific role requirement
+export function RequireRole({ role, children }) {
+  const { user } = useAuth()
+  if (!user || user.role !== role) return null
+  return children
+}
+
+// Role labels mapping
+export const ROLE_LABELS = {
+  admin: 'Administrator',
+  manager: 'Manager',
+  supervisor: 'Supervisor',
+  user: 'User'
 }

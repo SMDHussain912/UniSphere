@@ -1,0 +1,11 @@
+{
+  "name": "@unisphere/business-logic",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "files": ["dist"],
+  "dependencies": {
+    "@unisphere/shared-types": "1.0.0"
+  }
+}
