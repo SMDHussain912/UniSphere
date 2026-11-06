@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../api'
-import { Loader, EmptyState, Badge, Avatar } from '../../components/UI'
+import { Loader, EmptyState, Badge } from '../../components/UI'
 
 export default function Community() {
   const [discussions, setDiscussions] = useState([])
@@ -8,7 +8,6 @@ export default function Community() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true)
     Promise.all([
       api.get('/community/discussions').catch(() => ({ data: { discussions: [] } })),
       api.get('/community/communities').catch(() => ({ data: { communities: [] } })),
