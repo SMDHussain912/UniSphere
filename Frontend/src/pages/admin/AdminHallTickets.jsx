@@ -19,7 +19,6 @@ function Section() {
   const [filter, setFilter] = useState('all')
 
   const load = () => {
-    setLoading(true)
     api
       .get(`/admin/hall-tickets?status=${filter}&limit=50`)
       .then((res) => setItems(res.data.tickets || res.data || []))
