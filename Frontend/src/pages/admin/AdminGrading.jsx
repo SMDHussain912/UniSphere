@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { api } from '../../api'
 import { Loader, Alert, Badge, EmptyState, AdminTabs, RequireRole } from '../../components/UI'
 
@@ -20,16 +20,17 @@ function Section() {
   const [marks, setMarks] = useState({})
   const [feedback, setFeedback] = useState('')
 
-  const load = () => {
-    setDetail(null)
+  const load = useCallback(() => {
     api
       .get(`/admin/grading?status=${status}&limit=50`)
       .then((res) => setSheets(res.data.sheets || []))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }
+  }, [status])
 
-  useEffect(load, [status])
+  useEffect(() => {
+    load()
+  }, [load])
 
   const open = async (id) => {
     setError('')
@@ -70,7 +71,10 @@ function Section() {
       <Alert>{error}</Alert>
       <Alert kind="ok">{notice}</Alert>
       <div className="toolbar">
-        <select className="select" value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select className="select" value={status} onChange={(e) => {
+          setDetail(null)
+          setStatus(e.target.value)
+        }}>
           <option value="pending">Pending Verification</option>
           <option value="graded">Graded</option>
           <option value="all">All</option>
