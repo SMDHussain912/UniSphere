@@ -8,7 +8,6 @@ export default function InternJobs() {
   const [type, setType] = useState('jobs')
 
   useEffect(() => {
-    setLoading(true)
     api
       .get(`/jobs?type=${type}`)
       .then((res) => setItems(res.data.jobs || []))
