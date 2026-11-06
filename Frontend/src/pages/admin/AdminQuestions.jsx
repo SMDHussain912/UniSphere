@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { api } from '../../api'
 import { Loader, Alert, EmptyState, Field, formatDate } from '../../components/UI'
 import { RequireAdmin } from '../../components/UI'
@@ -21,18 +21,18 @@ function Section({ examId }) {
   const [form, setForm] = useState(EMPTY)
   const [busy, setBusy] = useState(false)
 
-  const load = () => {
+  const load = useCallback(() => {
     api
       .get(`/questions?examId=${examId}&limit=500`)
       .then((res) => setItems(res.data.questions))
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }
+  }, [examId])
 
   useEffect(() => {
     api.get(`/exams/${examId}`).then((res) => setExam(res.data)).catch(() => {})
     load()
-  }, [examId])
+  }, [examId, load])
 
   const setF = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
