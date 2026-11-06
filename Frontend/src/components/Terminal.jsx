@@ -221,8 +221,8 @@ export function LabTerminal({ onStopped }) {
     if (socketRef.current) {
       try {
         socketRef.current.close()
-      } catch (err) {
-        void err
+      } catch {
+        // Socket may already be closed.
       }
     }
     socketRef.current = null
