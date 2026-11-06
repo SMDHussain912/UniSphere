@@ -22,7 +22,6 @@ export default function Messages() {
         .finally(() => setLoading(false))
       return
     }
-    setLoading(true)
     api
       .get(`/chat/conversations/${id}/messages`)
       .then((res) => setMessages(res.data || []))
