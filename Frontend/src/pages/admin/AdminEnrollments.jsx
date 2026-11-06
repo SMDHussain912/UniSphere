@@ -125,7 +125,6 @@ function Section() {
           </table>
         </div>
       )}
-      {selected && <input type="hidden" value={selected} />}
     </div>
   )
 }
