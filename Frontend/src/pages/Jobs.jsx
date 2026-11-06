@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
-import { Loader, Alert, Badge, EmptyState, Pagination, formatDate } from '../components/UI'
+import { Loader, Alert, Badge, EmptyState, Pagination } from '../components/UI'
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([])
