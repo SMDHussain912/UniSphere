@@ -238,7 +238,7 @@ export function LabTerminal({ onStopped }) {
       const res = await api.post('/lab', { sessionType: 'code-server' })
       setSession(res.data.session)
       setStatus('connecting')
-    } catch (err) {
+    } catch {
       setStatus('error')
     } finally {
       setStarting(false)
