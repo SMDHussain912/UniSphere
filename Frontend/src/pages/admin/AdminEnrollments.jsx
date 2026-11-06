@@ -19,13 +19,11 @@ function Section() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [status, setStatus] = useState('all')
-  const [selected, setSelected] = useState('')
   const [centerId, setCenterId] = useState('')
   const [feePaid, setFeePaid] = useState(true)
   const [message, setMessage] = useState('')
 
   const load = () => {
-    setLoading(true)
     Promise.all([
       api.get(`/admin/enrollments?status=${status}&limit=50`),
       api.get('/admin/exam-centers'),
