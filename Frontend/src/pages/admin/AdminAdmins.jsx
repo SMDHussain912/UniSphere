@@ -31,7 +31,6 @@ function Section() {
   })
 
   const load = () => {
-    setLoading(true)
     api
       .get('/admin/admins')
       .then((res) => setItems(res.data || []))
