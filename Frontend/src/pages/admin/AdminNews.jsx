@@ -21,7 +21,6 @@ function Section() {
   const [busy, setBusy] = useState(false)
 
   const load = () => {
-    setLoading(true)
     api
       .get('/news')
       .then((res) => setItems(res.data))
