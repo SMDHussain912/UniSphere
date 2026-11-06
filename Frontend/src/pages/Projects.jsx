@@ -18,8 +18,6 @@ export default function Projects() {
   const [query, setQuery] = useState({})
 
   useEffect(() => {
-    setLoading(true)
-    setError('')
     const params = new URLSearchParams({ page: String(page), limit: '9' })
     if (query.q) params.set('q', query.q)
     if (query.difficulty && query.difficulty !== 'all') params.set('difficulty', query.difficulty)
