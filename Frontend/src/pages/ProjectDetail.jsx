@@ -90,8 +90,6 @@ export default function ProjectDetail({ slug }) {
         submissions={submissions}
         busy={busy}
         notice={notice}
-        setBusy={setBusy}
-        setNotice={setNotice}
         form={{ repoUrl, demoUrl, code, setRepoUrl, setDemoUrl, setCode }}
         runTests={runTests}
         submit={submit}
@@ -100,7 +98,7 @@ export default function ProjectDetail({ slug }) {
   )
 }
 
-function ProjectWorkspace({ project, user, submissions, busy, notice, setBusy, setNotice, form, runTests, submit }) {
+function ProjectWorkspace({ project, user, submissions, busy, notice, form, runTests, submit }) {
   return (
     <>
       <div className="grid mt">
