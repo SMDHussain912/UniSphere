@@ -1,22 +1,13 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api'
-import { Loader, EmptyState, Badge, Editor, VirtualTerminal } from '../../components/UI'
+import { Badge, Editor, VirtualTerminal } from '../../components/UI'
 
 export default function CodeLab() {
-  const [snippets, setSnippets] = useState([])
-  const [loading, setLoading] = useState(true)
   const [code, setCode] = useState('// Write your code here\nfunction greet() {\n  return "Hello, UniSphere!";\n}\n\nconsole.log(greet());')
   const [language, setLanguage] = useState('javascript')
   const [output, setOutput] = useState('')
   const [running, setRunning] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    api.get('/code/snippets')
-      .then((res) => setSnippets(res.data || []))
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
 
   const run = async () => {
     setRunning(true)
