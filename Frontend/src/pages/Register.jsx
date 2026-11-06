@@ -9,6 +9,7 @@ export default function Register() {
     firstname: '', lastname: '', email: '', phone: '', dob: '',
     gender: 'Male', qualification: 'Degree', password: '', captcha: '',
   })
+  const [captchaKey, setCaptchaKey] = useState(0)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -23,6 +24,7 @@ export default function Register() {
       navigate('/')
     } catch (err) {
       setForm((f) => ({ ...f, captcha: '' }))
+      setCaptchaKey((k) => k + 1)
       setError(err.message)
     } finally {
       setBusy(false)
@@ -75,7 +77,11 @@ export default function Register() {
             <input className="input" type="password" required value={form.password} onChange={set('password')} />
           </Field>
           <Field label="Captcha">
-            <CaptchaField value={form.captcha} onChange={(v) => setForm((f) => ({ ...f, captcha: v }))} />
+            <CaptchaField
+              value={form.captcha}
+              onChange={(v) => setForm((f) => ({ ...f, captcha: v }))}
+              refreshKey={captchaKey}
+            />
           </Field>
           <button className="btn btn-primary btn-block" disabled={busy}>
             {busy ? 'Creating...' : 'Register'}

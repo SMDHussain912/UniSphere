@@ -14,7 +14,10 @@ const asyncHandler = require('../middlewares/asyncHandler');
 const generateCaptcha = asyncHandler(async (req, res) => {
   const captcha = svgcaptcha.create({
     size: 4,
-    noise: 10,
+    noise: 2,
+    width: 220,
+    height: 64,
+    fontSize: 60,
     color: true,
     ignoreChars: '0Oo1ilI',
     charPreset:

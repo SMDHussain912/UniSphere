@@ -8,6 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [captcha, setCaptcha] = useState('')
+  const [captchaKey, setCaptchaKey] = useState(0)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -20,6 +21,7 @@ export default function Login() {
       navigate('/')
     } catch (err) {
       setCaptcha('')
+      setCaptchaKey((k) => k + 1)
       setError(err.message)
     } finally {
       setBusy(false)
@@ -40,7 +42,7 @@ export default function Login() {
             <input className="input" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </Field>
           <Field label="Captcha">
-            <CaptchaField value={captcha} onChange={setCaptcha} />
+            <CaptchaField value={captcha} onChange={setCaptcha} refreshKey={captchaKey} />
           </Field>
           <button className="btn btn-primary btn-block" disabled={busy}>
             {busy ? 'Logging in...' : 'Login'}

@@ -1,6 +1,7 @@
-import { cloneElement, isValidElement, useId } from 'react'
+import { cloneElement, isValidElement, useCallback, useEffect, useId, useState } from 'react'
 import { useHashLocation } from '../router'
 import { useAuth } from '../auth/AuthContext'
+import { api } from '../api'
 import { LabTerminal } from './Terminal'
 
 // Staff roles used throughout the application.
@@ -239,18 +240,134 @@ export function CaptchaField({
   value = '',
   onChange,
   id,
+  refreshKey,
+  onRefresh,
+  required = true,
   ...props
 }) {
+  const [svg, setSvg] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [prevRefreshKey, setPrevRefreshKey] = useState(refreshKey)
+
+  if (refreshKey !== prevRefreshKey) {
+    setPrevRefreshKey(refreshKey)
+    setLoading(true)
+    setError(null)
+  }
+
+  const loadCaptcha = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await api.getCaptcha()
+      setSvg(data)
+    } catch (err) {
+      setError(err.message || 'Failed to load captcha')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    let active = true
+    api.getCaptcha()
+      .then((data) => {
+        if (active) {
+          setSvg(data)
+          setError(null)
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setError(err.message || 'Failed to load captcha')
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+    return () => {
+      active = false
+    }
+  }, [refreshKey])
+
+  const handleRefresh = () => {
+    onChange?.('')
+    loadCaptcha()
+    onRefresh?.()
+  }
+
   return (
     <div className="captcha-field">
+      <div className="captcha-row">
+        {loading ? (
+          <div className="captcha-placeholder captcha-loading" aria-live="polite">
+            <Spinner size={14} />
+            <span>Loading challenge...</span>
+          </div>
+        ) : error ? (
+          <div className="captcha-placeholder captcha-error" role="alert">
+            <span>Failed to load</span>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={handleRefresh}
+              title="Retry loading captcha"
+            >
+              Retry
+            </button>
+          </div>
+        ) : (
+          <img
+            src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`}
+            alt="CAPTCHA challenge (click to refresh)"
+            className="captcha-img"
+            onClick={handleRefresh}
+            title="Click to refresh challenge"
+          />
+        )}
+
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm captcha-refresh-btn"
+          onClick={handleRefresh}
+          disabled={loading}
+          title="Get a new challenge"
+          aria-label="Refresh captcha challenge"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className={loading ? 'captcha-spinning' : ''}
+          >
+            <path d="M21.5 2v6h-6M2.5 22v-6h6" />
+            <path d="M21.5 15.5a9 9 0 0 1-16.14 4.16L2.5 16M2.5 8.5a9 9 0 0 1 16.14-4.16L21.5 8" />
+          </svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+
       <input
         id={id}
-        className="captcha-input"
+        className="input captcha-input"
         type="text"
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => onChange?.(event.target.value)}
         placeholder="Enter captcha code"
         autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
+        required={required}
         aria-label="Enter captcha code"
         {...props}
       />

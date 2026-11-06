@@ -19,6 +19,7 @@ export async function request(path, options = {}) {
     method: options.method || 'GET',
     headers,
     body,
+    credentials: 'include',
   })
 
   let data
@@ -46,12 +47,32 @@ export async function getRaw(path) {
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const res = await fetch(`${API}${path}`, { headers })
+  const res = await fetch(`${API}${path}`, {
+    headers,
+    credentials: 'include',
+  })
   if (!res.ok) {
     throw new Error(`Request failed (${res.status})`)
   }
   const blob = await res.blob()
   return URL.createObjectURL(blob)
+}
+
+export async function getCaptcha() {
+  const res = await fetch(`${API}/auth/captcha?t=${Date.now()}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'image/svg+xml, text/plain, */*',
+    },
+    credentials: 'include',
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw new Error(`Failed to load captcha (${res.status})`)
+  }
+
+  return await res.text()
 }
 
 export const api = {
@@ -64,4 +85,5 @@ export const api = {
     data.append(field, file)
     return request(path, { method: 'POST', body: data })
   },
+  getCaptcha,
 }
