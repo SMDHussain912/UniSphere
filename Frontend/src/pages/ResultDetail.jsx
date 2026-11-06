@@ -16,7 +16,6 @@ function ResultInner({ id }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    setLoading(true)
     api
       .get(`/exams/results/${id}`)
       .then((res) => setResult(res.data))
