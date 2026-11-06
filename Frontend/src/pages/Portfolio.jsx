@@ -3,8 +3,6 @@ import { useHashLocation } from '../router'
 import { api } from '../api'
 import { Loader, EmptyState, ProgressBar, Badge } from '../components/UI'
 
-const LEVEL_ICONS = ['', 'Apprentice', 'Developer', 'Engineer', 'Expert', 'Master']
-
 export default function Portfolio() {
   const location = useHashLocation()
   const segs = location.split('/').filter(Boolean)
@@ -23,7 +21,7 @@ export default function Portfolio() {
   if (loading) return <Loader />
   if (!data) return <EmptyState text="Portfolio not available." />
 
-  const { user, profile, stats, projects, achievements, skillEvidence } = data
+  const { user, profile, stats, projects, achievements } = data
   const fullname = user.fullname
   const displayName = `${fullname.firstname} ${fullname.lastname}`
 
