@@ -22,7 +22,6 @@ function Section({ examId }) {
   const [busy, setBusy] = useState(false)
 
   const load = () => {
-    setLoading(true)
     api
       .get(`/questions?examId=${examId}&limit=500`)
       .then((res) => setItems(res.data.questions))
