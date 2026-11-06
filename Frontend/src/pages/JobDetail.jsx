@@ -8,7 +8,6 @@ export default function JobDetail({ id }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    setLoading(true)
     api
       .get(`/jobs/${id}`)
       .then((res) => setJob(res.data))
