@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { Loader, Alert, Badge, formatDate, ProgressBar } from '../components/UI'
@@ -18,7 +18,7 @@ export default function ProjectDetail({ slug }) {
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
 
-  const load = () => {
+  const load = useCallback(() => {
     api
       .get(`/projects/${slug}`)
       .then(async (res) => {
@@ -31,9 +31,9 @@ export default function ProjectDetail({ slug }) {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }
+  }, [slug, user])
 
-  useEffect(load, [slug, user])
+  useEffect(() => { load() }, [load])
 
   const submit = async (e) => {
     e.preventDefault()
