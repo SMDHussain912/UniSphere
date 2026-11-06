@@ -20,7 +20,6 @@ function Section() {
   const [totalPages, setTotalPages] = useState(1)
 
   const load = () => {
-    setLoading(true)
     api
       .get(`/admin/exam-results?status=${status}&page=${page}&limit=15`)
       .then((res) => {
