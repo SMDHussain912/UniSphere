@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../api'
-import { Loader, EmptyState, Badge, formatDate } from '../../components/UI'
+import { Loader, EmptyState, Badge } from '../../components/UI'
 
 export default function Courses() {
   const [courses, setCourses] = useState([])
