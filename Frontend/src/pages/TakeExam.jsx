@@ -29,8 +29,6 @@ function TakeExamInner({ id }) {
   }, [answers])
 
   useEffect(() => {
-    setLoading(true)
-    setError('')
     api
       .get(`/exams/${id}/questions`)
       .then((res) => {
