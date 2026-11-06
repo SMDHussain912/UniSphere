@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { Loader, EmptyState, Avatar, Badge } from '../components/UI'
 
-const LEVEL_LABELS = ['Novice', 'Apprentice', 'Developer', 'Engineer', 'Expert', 'Master']
-
 export default function Leaderboard() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
