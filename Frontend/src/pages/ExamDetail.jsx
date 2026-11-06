@@ -15,7 +15,6 @@ export default function ExamDetail({ id }) {
   const [enrolled, setEnrolled] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
     api
       .get(`/exams/${id}`)
       .then((res) => setExam(res.data))
