@@ -18,6 +18,7 @@ export function LabTerminal({ onStopped }) {
   const fitRef = useRef(null)
   const socketRef = useRef(null)
   const reconnectRef = useRef({ attempts: 0, timer: null })
+  const connectRef = useRef(null)
   const disposedRef = useRef(false)
 
   useEffect(() => {
@@ -117,7 +118,7 @@ export function LabTerminal({ onStopped }) {
         let msg
         try {
           msg = JSON.parse(event.data)
-        } catch (err) {
+        } catch {
           return
         }
         if (msg.type === 'ok') {
@@ -127,8 +128,8 @@ export function LabTerminal({ onStopped }) {
           term.focus()
           try {
             fitRef.current.fit()
-          } catch (err) {
-            void err
+          } catch {
+            // The terminal may not have measurable dimensions yet.
           }
           if (term.cols && term.rows) {
             ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }))
@@ -170,7 +171,7 @@ export function LabTerminal({ onStopped }) {
       const delay = Math.min(15000, 1000 * 2 ** reconnectRef.current.attempts)
       reconnectRef.current.attempts += 1
       setStatus('reconnecting')
-      reconnectRef.current.timer = setTimeout(connect, delay)
+      reconnectRef.current.timer = setTimeout(() => connectRef.current?.(), delay)
     }
 
     ws.onerror = () => {
@@ -183,13 +184,18 @@ export function LabTerminal({ onStopped }) {
   }, [writeStatus, onStopped])
 
   useEffect(() => {
+    connectRef.current = connect
+  }, [connect])
+
+  useEffect(() => {
     if (status !== 'connecting' && status !== 'reconnecting') return
     if (!session) return
     connect()
+    const reconnect = reconnectRef.current
     return () => {
-      if (reconnectRef.current.timer) {
-        clearTimeout(reconnectRef.current.timer)
-        reconnectRef.current.timer = null
+      if (reconnect.timer) {
+        clearTimeout(reconnect.timer)
+        reconnect.timer = null
       }
     }
   }, [session, status, connect])
@@ -199,7 +205,7 @@ export function LabTerminal({ onStopped }) {
       if (termRef.current && fitRef.current && socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         try {
           fitRef.current.fit()
-        } catch (err) {
+        } catch {
           return
         }
         socketRef.current.send(JSON.stringify({ type: 'resize', cols: termRef.current.cols, rows: termRef.current.rows }))
