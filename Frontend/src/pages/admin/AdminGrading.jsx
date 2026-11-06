@@ -21,7 +21,6 @@ function Section() {
   const [feedback, setFeedback] = useState('')
 
   const load = () => {
-    setLoading(true)
     setDetail(null)
     api
       .get(`/admin/grading?status=${status}&limit=50`)
