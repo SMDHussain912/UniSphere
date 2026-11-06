@@ -23,7 +23,6 @@ function Section() {
   const [rejectMsg, setRejectMsg] = useState('')
 
   const load = () => {
-    setLoading(true)
     api
       .get(`/admin/applications?status=${status}&page=${page}&limit=15`)
       .then((res) => {
