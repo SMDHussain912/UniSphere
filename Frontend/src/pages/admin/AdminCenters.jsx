@@ -19,7 +19,6 @@ function Section() {
   const [editingId, setEditingId] = useState('')
 
   const load = () => {
-    setLoading(true)
     api
       .get('/admin/exam-centers')
       .then((res) => setItems(res.data || []))
