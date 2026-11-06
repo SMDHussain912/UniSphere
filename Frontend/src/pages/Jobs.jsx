@@ -14,8 +14,6 @@ export default function Jobs() {
   const [query, setQuery] = useState({})
 
   useEffect(() => {
-    setLoading(true)
-    setError('')
     const params = new URLSearchParams({ page, limit: '9' })
     if (query.search) params.set('search', query.search)
     if (query.category && query.category !== 'all') params.set('category', query.category)
