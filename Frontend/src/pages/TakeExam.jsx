@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api } from '../api'
 import { navigate } from '../router'
 import { Loader, Alert, RequireAuth } from '../components/UI'
@@ -40,7 +40,7 @@ function TakeExamInner({ id }) {
       .finally(() => setLoading(false))
   }, [id])
 
-  const doSubmit = async (auto) => {
+  const doSubmit = useCallback(async (auto) => {
     if (submittedRef.current) return
     submittedRef.current = true
     setBusy(true)
@@ -58,7 +58,7 @@ function TakeExamInner({ id }) {
     } finally {
       if (auto) setBusy(false)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     if (timeLeft === null || submittedRef.current) return
@@ -73,7 +73,7 @@ function TakeExamInner({ id }) {
       })
     }, 1000)
     return () => clearInterval(timerRef.current)
-  }, [timeLeft])
+  }, [timeLeft, doSubmit])
 
   const select = (qid, index) => {
     setAnswers((a) => ({ ...a, [qid]: index }))
