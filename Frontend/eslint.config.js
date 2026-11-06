@@ -13,6 +13,11 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    rules: {
+      'react-refresh/only-export-components': ['error', {
+        allowExportNames: ['STAFF_ROLES', 'useSearchParams', 'formatDate', 'ROLE_LABELS', 'useTheme', 'useAuth'],
+      }],
+    },
     languageOptions: {
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
