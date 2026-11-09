@@ -1,7 +1,7 @@
 # UniSphere — Master PRD Summary & Reference
 
-**Document version:** 1.0  
-**Date:** 3 November 2026  
+**Document version:** 1.1  
+**Date:** 9 November 2026  
 **Status:** Proposed product and engineering baseline  
 **Product:** UniSphere  
 **Product category:** AI-powered learning, practice, project development and professional growth ecosystem  
@@ -9,8 +9,8 @@
 ---
 
 ## Document Metadata
-- **Version:** 1.0
-- **Date:** 3 November 2026
+- **Version:** 1.1
+- **Date:** 9 November 2026
 - **Status:** Proposed product and engineering baseline
 - **Product:** UniSphere
 - **Category:** AI-powered learning, practice, project development and professional growth ecosystem
@@ -386,3 +386,280 @@ A feature is not complete merely because a page or API endpoint exists. Every fe
 **Document status:** Master PRD v1.0 — Proposed baseline  
 **Next required engineering artifact:** Existing Repository Audit and Current-to-Target Architecture Mapping  
 **Implementation rule:** Preserve working functionality, verify incomplete functionality, and introduce new architecture incrementally rather than rewriting the entire platform without evidence
+
+
+---
+
+# Part IV — Consolidated Ecosystem Expansion (Version 1.1)
+
+> This part consolidates the requirements previously maintained in the company trust/security, office-suite/virtual-computing, and real-time collaboration/software-engineering expansion documents. It extends the existing six-pillar product model; it does not declare these capabilities implemented or automatically commit them to the first release.
+
+## 32. Expansion Scope and Requirement Status
+
+### 32.1 Status vocabulary
+
+Every feature must be tracked using one of these states in implementation plans and release notes:
+
+- **Existing — verified:** Repository inspection found an implementation path or working feature. This is not a substitute for current automated and manual testing.
+- **Partial — verified:** A basic version exists, but important workflow, edge cases, permissions, or reliability work remains.
+- **Proposed — not verified:** A requirement is documented, but implementation has not been demonstrated.
+- **Blocked:** A dependency, security issue, provider decision, or infrastructure constraint prevents safe delivery.
+- **Deferred:** Intentionally excluded from the current release and reconsidered at a later planning checkpoint.
+
+Documentation presence, a roadmap checkbox, a UI placeholder, or a passing isolated test must not by itself be treated as proof that a production feature is complete.
+
+### 32.2 Product boundaries
+
+UniSphere remains one integrated application with shared identity, navigation, permissions, notifications, search, design system, and billing. The new requirements are grouped into capabilities within that application:
+
+1. Learn, Practice, Build, Prove, Connect, and Grow remain the six product pillars.
+2. Trust & Organization Services provide identity assurance and organization-level authorization across the pillars.
+3. Communication & Collaboration extend Connect and support learning, projects, mentorship, and hiring workflows.
+4. Developer Workspace extends Practice and Build.
+5. Productivity & Office Suite provides shared document and file workflows across learning, projects, and organizations.
+6. Virtual Computing provides isolated development environments; it is not an unrestricted general-purpose cloud computer.
+
+## 33. Trust, Company Verification, and Organization Security
+
+**Objective:** Establish trustworthy organization and professional workflows without treating an email domain or a self-declared company name as proof of identity.
+
+### 33.1 Organization lifecycle
+
+- **TRU-ORG-001:** Users can create an organization profile with legal/display name, organization type, website, business contact details, and a unique slug.
+- **TRU-ORG-002:** Organization verification supports documented evidence and a review workflow with pending, verified, rejected, suspended, and expired states.
+- **TRU-ORG-003:** Verification decisions record reviewer, timestamp, evidence references, decision reason, and expiry/reverification requirements.
+- **TRU-ORG-004:** Organization owners can invite members and assign scoped organization roles.
+- **TRU-ORG-005:** Membership supports invited, active, suspended, and removed states, with revocation taking effect on subsequent authorized requests.
+- **TRU-ORG-006:** Organization ownership transfer and recovery require an auditable, explicit workflow.
+- **TRU-ORG-007:** Public organization pages show verification status accurately and explain what the verification badge does and does not establish.
+
+### 33.2 Recruiter and professional identity
+
+- **TRU-ID-001:** Recruiter and interviewer accounts must be linked to an organization membership before accessing organization-only hiring tools.
+- **TRU-ID-002:** Candidate-facing views identify the organization and the role of the person contacting the candidate.
+- **TRU-ID-003:** Changes to organization affiliation, recruiter privileges, and verification status are auditable.
+- **TRU-ID-004:** Candidate discovery and contact workflows enforce consent, visibility settings, and organization-level permissions.
+
+### 33.3 Account and payment security
+
+- **TRU-SEC-001:** Support MFA, with passkeys/WebAuthn as a preferred option where practical.
+- **TRU-SEC-002:** Users can inspect and revoke active sessions and recover accounts through verified recovery channels.
+- **TRU-SEC-003:** Sensitive account changes require re-authentication or step-up verification where risk warrants it.
+- **TRU-SEC-004:** Payment provider tokens and references are stored instead of raw payment-card data. Payment processing remains delegated to a compliant provider.
+- **TRU-SEC-005:** Subscription changes, refunds, billing events, and organization plan changes have an auditable history.
+- **TRU-SEC-006:** Risk controls include abuse reporting, suspicious-activity review, rate limits, and account/organization suspension workflows.
+
+### 33.4 Trust acceptance criteria
+
+- An unverified organization cannot use features that explicitly require verified status.
+- A suspended or removed member loses organization-scoped access without requiring account deletion.
+- A verification decision can be reconstructed from its audit record.
+- A user cannot grant themselves organization-admin or recruiter privileges by changing client-side state or request data.
+- Verification badges and labels never imply government endorsement, guaranteed legitimacy, or a background check unless that exact check was performed.
+
+## 34. Communication and Collaboration
+
+**Objective:** Support reliable communication around learning, projects, communities, mentoring, and professional workflows.
+
+### 34.1 Messaging
+
+- **COMX-MSG-001:** Support persistent one-to-one direct messages.
+- **COMX-MSG-002:** Support group conversations with owner/admin/member roles and controlled invitation.
+- **COMX-MSG-003:** Support conversation membership changes, leave, removal, and blocking.
+- **COMX-MSG-004:** Support message history, pagination, unread state, read receipts, and optional typing/presence indicators.
+- **COMX-MSG-005:** Support attachments through controlled object storage, file validation, access checks, and size/type limits.
+- **COMX-MSG-006:** Provide message search only over conversations the requesting user is authorized to access.
+- **COMX-MSG-007:** Persist messages as the source of truth; WebSocket delivery is a real-time enhancement, not the only persistence mechanism.
+- **COMX-MSG-008:** Prevent duplicate message creation on retries through idempotency or equivalent safeguards.
+
+### 34.2 Communities and group spaces
+
+- **COMX-GRP-001:** Communities may be organized by skill, course, project, institution, or organization.
+- **COMX-GRP-002:** Community owners can configure visibility, joining rules, roles, and moderation permissions.
+- **COMX-GRP-003:** Group spaces support pinned posts/announcements and member management.
+- **COMX-GRP-004:** Private groups and channels must verify membership on every read and write operation.
+- **COMX-GRP-005:** Users can report content, block accounts, and control notification preferences.
+
+### 34.3 Audio/video and meetings
+
+- **COMX-CALL-001:** Support scheduled and ad-hoc one-to-one audio/video sessions as a later capability.
+- **COMX-CALL-002:** Group calls require an explicit architecture decision covering SFU/provider selection, concurrency, recording policy, and cost.
+- **COMX-CALL-003:** Meeting rooms support host controls, waiting rooms, invite permissions, and participant removal.
+- **COMX-CALL-004:** Recording is off by default and requires clear participant notice and consent before capture.
+- **COMX-CALL-005:** Interview and mentorship sessions may link to a candidate, project, mentor relationship, or organization, subject to access policy.
+
+### 34.4 Communication acceptance criteria
+
+- A user cannot read or send messages in a conversation after losing membership or being blocked.
+- Messages survive reconnects and are not lost when real-time transport is unavailable.
+- Retried requests do not create duplicate messages.
+- Moderation actions and membership changes are auditable.
+- Notifications respect mute, block, privacy, and user preference settings.
+
+## 35. Developer Workspace and Engineering Collaboration
+
+**Objective:** Connect learning and project work to practical software engineering workflows without rebuilding every third-party developer platform.
+
+### 35.1 Repository and Git integration
+
+- **DEV-REPO-001:** Users can connect supported Git providers through scoped OAuth permissions.
+- **DEV-REPO-002:** Users can link repositories to projects and portfolio entries.
+- **DEV-REPO-003:** Display repository metadata, default branch, activity, and permitted file views through provider APIs.
+- **DEV-REPO-004:** Where supported, provide issue and pull-request links, status summaries, and contribution references.
+- **DEV-REPO-005:** Never request or store raw Git provider passwords or personal access tokens when an OAuth flow is available.
+- **DEV-REPO-006:** Users can revoke provider access and disconnect integrations.
+- **DEV-REPO-007:** Repository visibility and provider permissions must be respected; private repository data must not leak into public profiles or AI context.
+
+### 35.2 Collaborative engineering
+
+- **DEV-COL-001:** Project workspaces support members, roles, tasks, milestones, comments, and activity history.
+- **DEV-COL-002:** Collaborative editing is a future capability requiring conflict-resolution and persistence design; do not imply simultaneous editing from ordinary chat or file sharing.
+- **DEV-COL-003:** Code review workflows may link submissions to commits, branches, pull requests, and review feedback.
+- **DEV-COL-004:** Team activity and contribution summaries must be evidence-based and allow correction of provider synchronization errors.
+
+### 35.3 API and system design tools
+
+- **DEV-API-001:** A future API workspace may support saved requests, environments, collections, response inspection, and shareable workspaces.
+- **DEV-DESIGN-001:** A future system-design workspace may support diagrams, architecture notes, and project-linked design decisions.
+- **DEV-TOOLS-001:** Tool integrations must be modular adapters with explicit permission scopes, failure handling, and provider rate-limit handling.
+
+## 36. Productivity Suite and File Management
+
+**Objective:** Provide practical document workflows connected to courses, projects, and organizations. These are proposed product modules, not a requirement to clone every feature of commercial office software.
+
+### 36.1 UniDocs — document editor
+
+- **OFF-DOC-001:** Create, edit, rename, organize, and delete user-owned documents.
+- **OFF-DOC-002:** Support autosave, revision history, and recovery from accidental edits.
+- **OFF-DOC-003:** Support common text formatting, headings, lists, tables, links, and export to interoperable formats.
+- **OFF-DOC-004:** Support sharing with explicit viewer/editor permissions and revocation.
+- **OFF-DOC-005:** Comments and collaborative editing are staged capabilities and require conflict handling and audit history.
+
+### 36.2 UniSheets — spreadsheet workspace
+
+- **OFF-SHEET-001:** Support workbooks, sheets, cells, basic formulas, sorting, filtering, and common data formats.
+- **OFF-SHEET-002:** Validate formulas and imported files; prevent formula execution from becoming an arbitrary code-execution path.
+- **OFF-SHEET-003:** Support CSV/XLSX import/export where library and compatibility constraints permit.
+- **OFF-SHEET-004:** Large datasets must use pagination/virtualization or other bounded rendering strategies.
+
+### 36.3 UniSlides — presentation workspace
+
+- **OFF-SLIDE-001:** Support presentations, slides, text, images, shapes, themes, and slide ordering.
+- **OFF-SLIDE-002:** Support export to PDF and interoperable presentation formats where feasible.
+- **OFF-SLIDE-003:** Shared editing and presenter workflows are later-stage capabilities.
+
+### 36.4 UniDrive — files and assets
+
+- **OFF-FILE-001:** Provide user, project, and organization file areas with explicit ownership and access control.
+- **OFF-FILE-002:** Store binary files in object storage, not as unbounded database documents.
+- **OFF-FILE-003:** Enforce upload limits, content-type validation, malware-scanning integration where available, and private download authorization.
+- **OFF-FILE-004:** Support folder organization, metadata, versioning, and retention/deletion policies.
+- **OFF-FILE-005:** Shared links must be revocable, scoped, and optionally time-limited.
+
+## 37. Virtual Computing and Cloud Development Environments
+
+**Objective:** Offer controlled, disposable development environments for learning and project work.
+
+- **VCE-001:** Users can request a predefined environment template for an allowed language or toolchain.
+- **VCE-002:** Every environment is associated with an owner, workspace, resource quota, creation time, and expiry policy.
+- **VCE-003:** Environments have explicit CPU, memory, disk, process, and runtime limits.
+- **VCE-004:** Environments are isolated from the application host, production secrets, and other users' workspaces.
+- **VCE-005:** Network access is disabled by default for untrusted code and enabled only through explicit, policy-controlled templates.
+- **VCE-006:** Sessions support start, stop, expiry, cleanup, and recoverable workspace storage where configured.
+- **VCE-007:** Users can inspect session state and resource consumption.
+- **VCE-008:** Database and API workspaces use scoped credentials, isolated test data, and environment-specific permissions.
+- **VCE-009:** No environment may expose the host Docker socket or unrestricted host filesystem.
+- **VCE-010:** Virtual machines or persistent general-purpose cloud desktops are deferred until infrastructure cost, isolation, abuse controls, and operational ownership are validated.
+
+## 38. Calendar, Scheduling, and Workflow Integration
+
+- **CAL-001:** Users can create events for study groups, mentoring, project milestones, and interviews.
+- **CAL-002:** Events have an owner, participants, start/end time with timezone, visibility, and status.
+- **CAL-003:** Invitations support accept, decline, and tentative responses.
+- **CAL-004:** Calendar notifications respect user preferences and event permissions.
+- **CAL-005:** External calendar integration requires explicit authorization and revocable provider access.
+- **CAL-006:** Meeting links and interview details are visible only to authorized participants.
+
+## 39. Cross-Cutting Requirements for the Expanded Ecosystem
+
+### 39.1 Authorization and privacy
+
+- Every feature must define resource ownership, visibility, organization scope, and role/permission checks.
+- Authorization is enforced on the server for every operation; hiding a UI control is not authorization.
+- AI context retrieval, search indexing, exports, notifications, and integrations must preserve the same access boundaries.
+- Users must be able to understand and control profile visibility, connected accounts, shared files, and notification preferences.
+
+### 39.2 Auditability
+
+- Record security-sensitive events including organization verification, membership/role changes, session revocation, payment state changes, moderation actions, file sharing, and integration connection/revocation.
+- Audit events include actor, action, target, timestamp, outcome, and relevant request/correlation ID.
+- Audit logs must not store passwords, access tokens, raw payment details, or unnecessary sensitive content.
+
+### 39.3 Reliability and operations
+
+- External providers must be accessed through adapters with timeouts, retries, rate-limit handling, and clear failure states.
+- Background jobs must be idempotent where retries are possible.
+- Real-time features must degrade gracefully to persisted REST workflows.
+- File and workspace cleanup must be observable and retryable.
+- Define operational metrics for message delivery, call quality, workspace startup, job failure, file processing, and provider synchronization before general availability.
+
+### 39.4 Accessibility and user control
+
+- New workspaces must remain responsive and keyboard accessible.
+- Provide clear loading, empty, offline, permission-denied, and failure states.
+- Users control notification categories, presence visibility, connected integrations, and sharing permissions.
+- Audio/video features must expose captions or accessible alternatives where technically available.
+
+## 40. Prioritization and Release Boundaries
+
+The following is a recommended sequencing proposal, not a promise of delivery dates.
+
+| Priority | Capability | Recommended scope | Release guidance |
+|---|---|---|---|
+| P0 | Existing platform correctness | Resolve known security/runtime blockers; reconcile inconsistent roadmap and test status; verify existing flows | Required before expanding risky capabilities |
+| P1 | Trust foundation | Organization membership, scoped roles, audit events, verification review workflow, session controls | Build the authorization foundation before recruiter/organization features |
+| P1 | Messaging reliability | Verify current DMs; persistence, membership checks, unread state, blocking/reporting, real-time transport | Deliver reliable text communication before calls |
+| P1 | Developer integrations | Repository linking and read-only metadata through scoped OAuth | Start with provider integration; avoid self-hosting Git |
+| P2 | Group collaboration | Group conversations, channels, roles, moderation, project-linked discussions | After messaging and authorization foundations |
+| P2 | UniDrive foundation | Private file storage, permissions, upload validation, folders, versioning | Needed before office editors and attachments scale |
+| P2 | UniDocs | Basic document creation/editing/export and revision history | Deliver a focused editor, not a full office clone |
+| P3 | Calendar and scheduling | Events, invitations, timezone handling, notifications | Enable mentorship and interview workflows |
+| P3 | UniSheets and UniSlides | Basic spreadsheet and presentation workflows | Validate user demand and maintenance cost |
+| P3 | Audio/video | One-to-one calls and meeting controls | Requires provider/SFU, consent, moderation, and cost decision |
+| P3 | API/system design workspace | Project-linked API collections and architecture artifacts | Build only after developer workspace usage is validated |
+| P4 | Persistent VMs/cloud desktops | Persistent compute and advanced virtual environments | Deferred pending cost and isolation review |
+
+### 40.1 Explicit first-release exclusions
+
+Unless separately approved in a release decision, the first release does not include:
+- A full commercial-grade Word/Excel/PowerPoint replacement.
+- Unrestricted public cloud VMs or arbitrary network-enabled compute.
+- A self-hosted GitHub/GitLab replacement.
+- Large-scale video conferencing or call recording.
+- Automatic legal/business verification without a human review and evidence process.
+- A claim that a company, recruiter, candidate, or skill is trustworthy solely because a profile is complete or a badge is present.
+
+## 41. Expansion Acceptance and Definition of Done
+
+A feature is not complete merely because its UI exists or its API returns success. Before marking a requirement **Existing — verified**:
+
+1. The user journey is implemented end to end.
+2. Authentication, resource authorization, ownership, and organization boundaries are tested.
+3. Validation, failure, retry, and duplicate-request behavior are tested.
+4. Relevant unit and integration tests pass.
+5. Frontend production build passes for affected applications.
+6. Accessibility and responsive behavior receive a practical check.
+7. Logs and audit events exist for security-sensitive operations.
+8. Documentation and roadmap status agree with the actual implementation.
+9. Any external integration has a documented permission scope, disconnect path, and failure behavior.
+10. Deployment-specific dependencies and operational limits are documented.
+
+## 42. Source Documents Consolidated
+
+This PRD now incorporates the requirements and analysis from:
+
+- [Company Verification, Trust & Platform Security Requirements](COMPANY_VERIFICATION_TRUST_SECURITY_REQUIREMENTS.md)
+- [Office Suite, Virtual Computing & Complete Developer Workspace Expansion](OFFICE_SUITE_VIRTUAL_COMPUTING_WORKSPACE_EXPANSION_REQUIREMENTS.md)
+- [Real-Time Communication, Collaboration & Software Engineering Ecosystem Requirements](REALTIME_COMMUNICATION_COLLABORATION_SOFTWARE_ENGINEERING_ECOSYSTEM_REQUIREMENTS.md)
+
+These source documents remain useful as detailed supporting analyses. If a requirement changes, update this master PRD first and then keep the supporting documents and roadmap aligned. Where source documents conflict with repository evidence or one another, implementation status must be marked **needs verification** rather than silently treating the most optimistic status as correct.
